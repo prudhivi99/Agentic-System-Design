@@ -71,7 +71,7 @@ if __name__ == "__main__":
 
 
    parser = argparse.ArgumentParser()
-   parser.add_argument("--repo", default=str(Path(__file__).parent.parent / "sample_project"))
+   parser.add_argument("--repo", default=str(Path(__file__).resolve().parents[2] / "sample_data" / "sample_project"))
    args = parser.parse_args()
    repo_path = str(Path(args.repo).resolve())
 
