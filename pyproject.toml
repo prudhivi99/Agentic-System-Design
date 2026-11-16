@@ -1,0 +1,21 @@
+[project]
+name = "agentic-system-design"
+version = "0.1.0"
+description = "Learning notes, exercises and final project for the Agentic System Design course"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "python-dotenv",
+    "langgraph",
+    "langchain>=1.0",
+    "langchain-core",
+    "langchain-openai",
+    "langchain-huggingface",
+    "langchain-text-splitters",
+    "langchain-chroma",
+    "chromadb",
+    "sentence-transformers",
+]
+
+[tool.uv]
+package = false
