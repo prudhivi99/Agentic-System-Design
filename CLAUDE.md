@@ -28,3 +28,10 @@ explain the "why", not just the "what".
 - Use examples and comparison tables (when to use / when not to use).
 - When drafting a module README, leave the "in my own words" parts as clear TODO prompts
   for me to fill in, rather than writing them all for me.
+
+## Git
+
+- Commits must be authored by me only:
+  `prudhivi99 <63187046+prudhivi99@users.noreply.github.com>` (author and committer).
+- No Claude attribution anywhere: no `Co-Authored-By: Claude`, no `Claude-Session` lines in
+  commit messages, and no "Generated with Claude Code" footer in pull request descriptions.
