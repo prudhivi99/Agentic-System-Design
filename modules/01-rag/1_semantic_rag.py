@@ -18,6 +18,8 @@ from langchain.agents import create_agent
 
 
 CHUNK_SIZE = 256
+TOP_K = 5
+EMBED_MODEL = "all-MiniLM-L6-v2"
 
 
 def load_codebase(repo_path: str) -> list:
@@ -30,10 +32,10 @@ def load_codebase(repo_path: str) -> list:
 
 
 
-def chunk_code(docs: list) -> list:
+def chunk_code(docs: list, chunk_size: int = CHUNK_SIZE) -> list:
    splitter = RecursiveCharacterTextSplitter.from_language(
        language=Language.PYTHON,
-       chunk_size=CHUNK_SIZE,
+       chunk_size=chunk_size,
        chunk_overlap=32,
    )
    return splitter.split_documents(docs)
@@ -41,16 +43,16 @@ def chunk_code(docs: list) -> list:
 
 
 
-def build_vector_store(chunks: list) -> Chroma:
-   embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+def build_vector_store(chunks: list, model_name: str = EMBED_MODEL) -> Chroma:
+   embeddings = HuggingFaceEmbeddings(model_name=model_name)
    return Chroma.from_documents(chunks, embedding=embeddings)
 
 
 
 
-def build_agent(vector_store: Chroma):
+def build_agent(vector_store: Chroma, k: int = TOP_K):
    retriever_tool = create_retriever_tool(
-       vector_store.as_retriever(search_kwargs={"k":5}),
+       vector_store.as_retriever(search_kwargs={"k": k}),
        name="search_codebase",
        description="Search the codebase for relevant functions, classes, or logic.",
    )

@@ -22,3 +22,8 @@ Add terms as they come up in the course. Keep definitions to one or two lines.
 | **Agentic RAG** | An agent that uses retrieval as one of its tools. |
 | **Grounding** | Making answers rely on retrieved sources rather than model memory. |
 | **Hallucination** | A confident answer that isn't supported by facts or sources. |
+| **Eval set / golden set** | Fixed questions with known correct answers, re-run after every change to compare configs fairly. |
+| **Retrieval hit** | The chunk with the answer was in the top-k. A file can be a hit while the exact chunk is missed. |
+| **Query rewriting** | The agent turns your question into its own search query before calling the retriever. |
+| **Distance score** | How far a chunk's vector is from the query's vector. Lower = more similar (Chroma's default). |
+| **Max sequence length** | Most tokens an embedding model reads (MiniLM: 256). Anything longer is silently cut off before embedding. |

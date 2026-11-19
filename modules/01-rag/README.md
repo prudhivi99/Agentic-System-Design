@@ -69,7 +69,18 @@ Questions to try:
 - Which plan tiers exist and what are their limits?
 - Who is allowed to see the system report?
 
+Run the fixed test questions (see [test_cases.md](test_cases.md)) and see what was retrieved:
+
+```bash
+uv run modules/01-rag/2_eval_rag.py --save                     # baseline
+uv run modules/01-rag/2_eval_rag.py --chunk-size 512 --save    # one change per run
+uv run modules/01-rag/2_eval_rag.py --retrieval-only           # free, no LLM call
+```
+
 ## 5. What I tried / experiments
+
+Test questions, expected answers and what to observe: [test_cases.md](test_cases.md).
+Why chunk size and k trade off: [concepts/01-rag.md § Tuning retrieval](../../docs/concepts/01-rag.md#tuning-retrieval-chunk-size-and-k).
 
 | Experiment | Change | Result |
 |---|---|---|
@@ -86,7 +97,7 @@ Questions to try:
 
 - Code has exact names (function, class). When is plain `grep` better than semantic search?
   (See [concepts/01-rag.md](../../docs/concepts/01-rag.md).)
-- What happens when a function is split across two chunks?
+- What happens when a function is split across two chunks? (Test it: T5, T6 in [test_cases.md](test_cases.md).)
 - ✍️ TODO
 
 ## 8. How this could be used in my final project
