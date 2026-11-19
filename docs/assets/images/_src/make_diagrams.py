@@ -794,7 +794,32 @@ def k_cut_ranked_list():
     svg(W, H, b, "k-cut-ranked-list", "01-rag", "Search ranks every chunk. For 'what is AuthService for?' the small AuthError chunk ranked first. k=1 cuts after rank 1 and misses AuthService; k=4 includes it and the agent answers correctly.")
 
 
+def course_roadmap():
+    W, H = 1100, 470
+    b = title(W, "Course roadmap: 5 sections", "From retrieval basics to a production AI coding agent.")
+    sections = [("Foundation +", "Knowledge Systems", "RAG, embeddings,", "vector search, evals", YELLOW),
+                ("Context", "Engineering", "memory, token budget,", "compression", GREEN),
+                ("Agent Systems +", "Harness Engineering", "tools, MCP,", "multi-agent", BLUE),
+                ("Production AI /", "LLMOps", "tracing, evals, cost,", "caching, guardrails", PURPLE),
+                ("Capstone", "AI coding agent", "design it, then", "build it", ORANGE)]
+    for i, (h1, h2, d1, d2, col) in enumerate(sections):
+        x = 40 + i * 210
+        b += note(x, 150, 190, 210, col, rot=(-1, 0.8, -0.6, 0.9, -0.8)[i])
+        b += badge(x + 28, 180, i + 1)
+        b += t(x + 95, 232, [h1, h2], size=15.5, weight=800, anchor="middle")
+        b += t(x + 95, 300, [d1, d2], size=13, anchor="middle", color=SOFT)
+        if i < 4:
+            b += arrow(x + 192, 255, x + 208, 255)
+    # you are here
+    b += f'<path d="M135,395 v-28" stroke="{ACCENT}" stroke-width="3" marker-end="url(#head)"/>'
+    b += note(45, 398, 190, 50, "#FFFFFF", rot=0, tape=False)
+    b += t(140, 429, "you are here: week 1", size=14, weight=800, anchor="middle", color=ACCENT)
+    b += i_spark(1035, 140, 0.9, fill=ACCENT)
+    svg(W, H, b, "course-roadmap", "course", "The course has 5 sections: Foundation and Knowledge Systems, Context Engineering, Agent Systems and Harness Engineering, Production AI and LLMOps, and the AI coding agent capstone. Week 1 is section 1.")
+
+
 if __name__ == "__main__":
+    course_roadmap()
     k_cut_ranked_list()
     ast_tree()
     ast_vs_characters()

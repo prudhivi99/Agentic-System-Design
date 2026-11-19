@@ -28,6 +28,9 @@ flowchart LR
 
 Stuck on a word? → [Glossary](docs/glossary.md)
 
+📅 **Where am I in the course?** → [Course roadmap](docs/course-roadmap.md): all 5 sections, each
+topic linked to its doc, with ✅ / 🟡 / ⚪ status. Currently: **week 1, section 1**.
+
 ## 📚 Concepts
 
 ### 01 – RAG (Retrieval-Augmented Generation)
@@ -79,6 +82,7 @@ Agentic-System-Design/
 │   │   └── 02-agentic-ai/ ← Agentic AI learning path (4 pages)
 │   ├── assets/images/     ← pictures used in the docs (e.g. from LinkedIn posts)
 │   ├── templates/         ← template for module READMEs
+│   ├── course-roadmap.md  ← the course's 5 sections and what's covered so far
 │   ├── references.md      ← collected posts and articles
 │   └── glossary.md        ← terms and definitions
 ├── modules/               ← one numbered folder per course module (code + notes)
