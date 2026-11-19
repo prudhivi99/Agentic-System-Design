@@ -157,11 +157,14 @@ A whole class is one chunk, however big it is:
  └── tick            starts at char 1,320    ← T6, T8's answer
 ```
 
-Two effects:
+Three effects:
 - **Matching gets weaker.** The embedding model reads only about 256 tokens, which for code is
   very roughly the first ~800 characters (an estimate). Methods further down, like `tick()`,
   may not affect the chunk's vector at all.
   ([Why](03-embeddings.md#golden-rules))
+- **Small chunks can outrank the real answer.** With `k=1`, "what is AuthService for?" got
+  the 97-char `AuthError` chunk instead of `AuthService`
+  ([real example](04-chunk-size-and-k.md#real-example-k--1-vs-k--4)).
 - **Costs go up.** With `k=4`, the agent can receive up to ~13,000 characters if the biggest
   classes come back.
 

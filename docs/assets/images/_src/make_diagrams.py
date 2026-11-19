@@ -750,7 +750,52 @@ def ast_uses():
     svg(W, H, b, "ast-uses", "01-rag", "ASTs are used by compilers and interpreters, linters, IDEs, and code RAG.")
 
 
+def k_cut_ranked_list():
+    W, H = 1100, 560
+    b = title(W, "k = where you cut the ranked list", "Real run, module 02 (AST chunks): \"what is AuthService for?\"")
+
+    # question
+    b += note(50, 180, 200, 150, PINK, rot=-1.2)
+    b += i_chat(150, 225)
+    b += t(150, 285, ['"what is', 'AuthService for?"'], size=14, anchor="middle", italic=True)
+    b += arrow(258, 255, 318, 255)
+    b += t(288, 240, "search", size=13, anchor="middle", color=SOFT)
+
+    # ranked list
+    rows = [("1", "auth.py · AuthError", "97 chars, all about \"auth\"", "#FFFFFF"),
+            ("2", "auth.py · AuthService", "1,884 chars: the real answer", YELLOW),
+            ("3", "another chunk", "", "#FFFFFF"),
+            ("4", "another chunk", "", "#FFFFFF")]
+    for i, (n, name, sub, col) in enumerate(rows):
+        y = 140 + i * 78
+        b += note(330, y, 380, 60, col, rot=0, tape=False)
+        b += badge(358, y + 30, n, r=14)
+        b += t(385, y + (27 if sub else 36), name, size=15, weight=800, font=MONO)
+        if sub:
+            b += t(385, y + 48, sub, size=12.5, color=SOFT)
+    # cut lines
+    b += f'<path d="M320,{210} h400" stroke="{BAD}" stroke-width="3" stroke-dasharray="8 6"/>'
+    b += t(730, 215, "k = 1 cut", size=14, weight=800, color=BAD)
+    b += f'<path d="M320,{444} h400" stroke="{GOOD}" stroke-width="3" stroke-dasharray="8 6"/>'
+    b += t(730, 449, "k = 4 cut", size=14, weight=800, color=GOOD)
+
+    # outcomes
+    b += note(830, 135, 230, 120, "#FFFFFF", rot=1, tape=False)
+    b += cross(860, 165)
+    b += t(882, 171, "k = 1", size=16, weight=800)
+    b += t(848, 205, ["sees only AuthError", '→ "I could not find that"'], size=13.5)
+    b += note(830, 330, 230, 120, "#FFFFFF", rot=-1, tape=False)
+    b += check(860, 360)
+    b += t(882, 366, "k = 4", size=16, weight=800)
+    b += t(848, 400, ["sees AuthService too", "→ correct answer"], size=13.5)
+
+    b += note(150, 478, 800, 58, YELLOW, rot=-0.3, tape=False)
+    b += t(550, 513, "k is a safety margin: the right chunk is often #2 or #3, not #1.", size=17, weight=800, anchor="middle")
+    svg(W, H, b, "k-cut-ranked-list", "01-rag", "Search ranks every chunk. For 'what is AuthService for?' the small AuthError chunk ranked first. k=1 cuts after rank 1 and misses AuthService; k=4 includes it and the agent answers correctly.")
+
+
 if __name__ == "__main__":
+    k_cut_ranked_list()
     ast_tree()
     ast_vs_characters()
     ast_uses()
