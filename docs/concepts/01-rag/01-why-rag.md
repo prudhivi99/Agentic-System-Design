@@ -42,7 +42,7 @@ A confident wrong answer is called a **hallucination**.
 | Up to date | ❌ Frozen at the training date | ✅ As fresh as your index |
 | Can cite a source | ❌ No | ✅ "billing.py, line 19" |
 | Hallucination risk | 🔴 High | 🟡 Lower (not zero!) |
-| Extra cost | None | Building the index, plus a search per question |
+| Extra cost and latency | None | Building the index, plus a search on every question (slower and costlier per answer) |
 
 ## An analogy: the open-book exam
 

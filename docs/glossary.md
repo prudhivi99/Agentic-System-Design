@@ -34,7 +34,7 @@ page that explains the term in depth.
 | **Embedding model** | The model that turns text into vectors (e.g. `all-MiniLM-L6-v2`). Not the same model as the LLM. |
 | **chunk_size** | Maximum size of one chunk; characters in our splitter, tokens in some tools. See [Chunk size and k](concepts/01-rag/04-chunk-size-and-k.md). |
 | **Separators** | The places a splitter prefers to cut (`class`, `def`, blank line, newline…). See [Chunking](concepts/01-rag/02-chunking.md). |
-| **Reranker** | A second model that re-sorts the top search results for better precision. |
+| **Reranker** | A second, more careful model that reads the question and each retrieved chunk together and re-sorts them. See [Advanced RAG patterns](concepts/01-rag/11-advanced-rag-patterns.md). |
 | **Long context** | Sending the whole document in the prompt instead of retrieving pieces. |
 | **Fine-tuning** | Training a model further on your examples. Good for behavior/style, poor for facts. |
 | **Token** | The unit LLMs read and charge by; roughly ¾ of an English word. Code often uses more tokens per character. |
@@ -65,3 +65,13 @@ page that explains the term in depth.
 | **Graph RAG** | Retrieval over a knowledge graph (entities and their relationships) instead of text chunks. |
 | **EnsembleRetriever** | LangChain's retriever that runs several retrievers and merges their results with weighted RRF (module 04). |
 | **Middleware (agent)** | Code that runs around each LLM or tool call, e.g. to limit how many calls an agent may make (module 04's guardrails). |
+| **Data ingestion** | The "prepare" half of RAG: load, chunk, embed and store documents before any question is asked. |
+| **Agentic chunking** | An LLM decides where each chunk starts and ends. |
+| **Query transformation** | Changing the question before searching: rewriting, multi-query, HyDE. |
+| **Multi-query** | The LLM writes several versions of the question; each is searched and the results merged. |
+| **HyDE (Hypothetical Document Embeddings)** | Search with an LLM-written *fake answer* instead of the question, because answers look like the documents. |
+| **Corrective RAG (CRAG)** | An evaluator grades the retrieved chunks; bad ones are replaced, e.g. by a web search. |
+| **Self-RAG** | The model decides when to retrieve and critiques whether its own answer is relevant, supported and useful. |
+| **LLM as judge** | Using an LLM call to check another LLM's answer (e.g. "is this supported by the sources?"). |
+| **RAPTOR** | Builds a tree of summaries (summaries of chunk groups, then summaries of those) so big-picture questions can be answered. |
+| **Latency** | How long the user waits for an answer. Every extra RAG step adds some. |

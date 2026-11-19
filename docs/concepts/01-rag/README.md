@@ -4,8 +4,8 @@
 > You don't need to understand everything the first time. Run the code, then come back.
 > It gets clearer every time.
 
-The path has **two parts**. Part A teaches the basics with module 01. Part B improves
-*how* chunks are found, one module per idea.
+The path has **three parts**. Part A teaches the basics with module 01. Part B improves
+*how* chunks are found, one module per idea. Part C maps the advanced patterns.
 
 ```mermaid
 flowchart TB
@@ -17,7 +17,11 @@ flowchart TB
         direction LR
         B7["7. AST chunking"] --> M2["Module 02"] --> B8["8. Lexical and BM25"] --> M3["Module 03"] --> B9["9. Semantic vs. lexical"] --> B10["10. Hybrid RAG"] --> M4["Module 04"]
     end
-    A --> B
+    subgraph C["Part C · Advanced patterns"]
+        direction LR
+        C11["11. Advanced RAG patterns"]
+    end
+    A --> B --> C
 ```
 
 ### Part A · RAG basics
@@ -44,6 +48,12 @@ flowchart TB
 | 10 | [Hybrid RAG](10-hybrid-rag.md) | An architecture that combines several retrievers; merging with (weighted) RRF. | 15 min |
 | | **Code:** [module 04 – hybrid RAG](../../../modules/04-hybridrag/README.md) | | |
 
+### Part C · Advanced patterns
+
+| # | Page | You will learn | Time |
+|---|---|---|---|
+| 11 | [Advanced RAG patterns](11-advanced-rag-patterns.md) | "One extra step = a new kind of RAG": RAPTOR, HyDE, reranking, Corrective RAG, Self-RAG, and how to debug wrong answers. | 20 min |
+
 ## The whole idea on one page
 
 ![RAG in 2 steps: prepare (documents, chunk, embed, store) and answer (question, find k closest, add to prompt, LLM answers)](../../assets/images/01-rag/rag-overview.svg)
@@ -65,7 +75,7 @@ flowchart TB
 
 ## Self-check before moving on
 
-After all ten pages, you should be able to answer these without looking.
+After all eleven pages, you should be able to answer these without looking.
 Each page has its own questions at the bottom, with answers.
 
 - [ ] Why can't the LLM just answer questions about my private documents?
@@ -78,5 +88,6 @@ Each page has its own questions at the bottom, with answers.
 - [ ] What are BM25's three scoring ideas?
 - [ ] When is lexical search better than semantic search?
 - [ ] What is Hybrid RAG, and why merge by rank (RRF) instead of by score?
+- [ ] Users say answers are wrong: what do you check first?
 
 Words you don't know → [glossary](../../glossary.md).

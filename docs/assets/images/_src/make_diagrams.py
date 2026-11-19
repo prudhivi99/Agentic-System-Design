@@ -1008,7 +1008,146 @@ def hybrid_combinations():
     svg(W, H, b, "hybrid-combinations", "01-rag", "Four example hybrid combinations: lexical plus semantic (most common, module 04), semantic plus graph, semantic plus SQL, and several vector retrievers with different embedding models.")
 
 
+# ---------------------------------------------------------------------------
+# Diagrams: advanced RAG patterns (RAG page 11)
+# ---------------------------------------------------------------------------
+def advanced_rag_map():
+    W, H = 1100, 600
+    b = title(W, "Add one extra step → a new kind of RAG", "Basic RAG is ingest → retrieve → generate. Each advanced pattern plugs into one step.")
+    stages = [("Ingest", "chunk · embed · store", YELLOW),
+              ("Query", "the user's question", PINK),
+              ("Retrieve", "find chunks", BLUE),
+              ("Check chunks", "keep the good ones", GREEN),
+              ("Generate", "LLM answers", PURPLE),
+              ("Check answer", "is it supported?", ORANGE)]
+    for i, (name, sub, col) in enumerate(stages):
+        x = 30 + i * 178
+        b += note(x, 130, 160, 92, col, rot=0, tape=False)
+        b += badge(x + 22, 152, i + 1, r=13)
+        b += t(x + 80, 180, name, size=16, weight=800, anchor="middle")
+        b += t(x + 80, 204, sub, size=12.5, anchor="middle", color=SOFT)
+        if i < 5:
+            b += arrow(x + 162, 176, x + 176, 176, width=2)
+    b += t(W / 2, 252, "steps 1, 3 and 5 = basic RAG     ·     steps 2, 4 and 6 = optional extra steps", size=13.5, anchor="middle", color=SOFT, italic=True)
+    patterns = [
+        ["Agentic chunking", "Table-aware chunks", "RAPTOR (summary tree)"],
+        ["Query rewriting", "Multi-query", "HyDE"],
+        ["Hybrid (BM25 + vector)", "Agentic routing", "Other sources: web, SQL"],
+        ["Reranking", "Corrective RAG", "(grade the chunks)"],
+        ["Repeat the question", "in the prompt", "(research idea)"],
+        ["Self-RAG", "Fact-check / judge", "Citations"],
+    ]
+    for i, items in enumerate(patterns):
+        x = 30 + i * 178
+        b += f'<path d="M{x + 80},228 v{-0}" />'
+        b += arrow(x + 80, 270, x + 80, 294, color=SOFT, width=2)
+        for j, item in enumerate(items):
+            y = 300 + j * 52
+            muted = item.startswith("(") or item == "in the prompt"
+            b += f'<rect x="{x + 5}" y="{y}" width="150" height="40" rx="8" fill="#FFFFFF" stroke="{"#00000010" if muted else "#00000025"}"/>'
+            b += t(x + 80, y + 25, item, size=12.5, weight=400 if muted else 700, anchor="middle", color=SOFT if muted else INK, italic=muted)
+    b += note(150, 480, 800, 90, YELLOW, rot=-0.3, tape=False)
+    b += t(550, 515, "Every extra step = better answers, but more LLM calls, cost and latency.", size=17, weight=800, anchor="middle")
+    b += t(550, 545, "Add a step only when your test cases show the problem it fixes.", size=14.5, anchor="middle", color=SOFT)
+    svg(W, H, b, "advanced-rag-map", "01-rag", "A map of advanced RAG: ingest, query, retrieve, check chunks, generate, check answer, with the patterns that plug into each step, such as RAPTOR, HyDE, hybrid, reranking, Corrective RAG and Self-RAG.")
+
+
+def hyde():
+    W, H = 1100, 500
+    b = title(W, "HyDE: search with a made-up answer", "Hypothetical Document Embeddings: questions and answers look different. Answers look like answers.")
+    b += note(40, 150, 200, 130, PINK, rot=-1)
+    b += i_chat(140, 192)
+    b += t(140, 245, ['"how are free users', 'stopped?"'], size=13, anchor="middle", italic=True)
+    b += arrow(245, 215, 300, 215)
+    b += note(305, 150, 170, 130, PURPLE, rot=0.8)
+    b += i_brain(390, 195, 0.9, fill="#FFFFFF")
+    b += t(390, 250, "LLM writes a", size=13.5, anchor="middle", weight=700)
+    b += t(390, 268, "fake answer", size=13.5, anchor="middle", weight=700)
+    b += arrow(480, 215, 535, 215)
+    b += note(540, 140, 250, 150, "#FFFFFF", rot=-0.8, tape=False)
+    b += t(560, 168, "hypothetical document", size=12.5, weight=800, color=SOFT)
+    b += t(560, 194, ["def check_limit(user):", "  if count >= limit:", "    raise LimitError(...)"], size=12.5, font=MONO)
+    b += t(560, 270, "may be wrong: that's OK", size=12.5, color=BAD, italic=True)
+    b += arrow(795, 215, 850, 215)
+    b += t(822, 200, "embed", size=12.5, anchor="middle", color=SOFT)
+    b += note(855, 150, 200, 130, BLUE, rot=1)
+    b += i_db(955, 195, 0.9)
+    b += t(955, 248, ["vector search", "→ REAL chunks"], size=13.5, weight=700, anchor="middle")
+    b += note(110, 345, 880, 120, YELLOW, rot=-0.3, tape=False)
+    b += t(550, 380, "The fake answer is used only to SEARCH, never shown to the user.", size=17, weight=800, anchor="middle")
+    b += t(550, 410, "It sounds like real code, so it lands close to real code on the meaning map.", size=14.5, anchor="middle")
+    b += t(550, 438, "The LLM then answers from the REAL chunks it found.", size=14.5, anchor="middle")
+    svg(W, H, b, "hyde", "01-rag", "HyDE: the LLM writes a hypothetical answer to the question, that answer is embedded and used for vector search, and the real chunks found are used to answer.")
+
+
+def corrective_vs_self_rag():
+    W, H = 1100, 560
+    b = title(W, "Corrective RAG vs. Self-RAG", "Two ways to add a check step. They check different things.")
+    b += note(50, 130, 480, 390, GREEN, rot=-0.6)
+    b += t(80, 172, "Corrective RAG (CRAG)", size=20, weight=800)
+    b += t(80, 198, "checks the CHUNKS, before answering", size=14, weight=700, color=SOFT)
+    b += pill(80, 222, "retrieve", size=13)[0] + arrow(168, 235, 195, 235, width=2)
+    b += pill(200, 222, "grade each chunk", size=13, fill=YELLOW)[0]
+    b += t(80, 290, "an evaluator (often a small, separate model)", size=13, color=SOFT, italic=True)
+    rows = [(check, "good", "→ use them (cleaned up)"), (warn, "unsure", "→ use them + web search"), (cross, "bad", "→ throw away, web search")]
+    for i, (mark, lab, act) in enumerate(rows):
+        y = 330 + i * 46
+        b += mark(95, y, 0.8)
+        b += t(118, y + 5, lab, size=15, weight=800)
+        b += t(190, y + 5, act, size=14.5)
+    b += t(80, 485, "Then generate the answer as usual.", size=14, weight=700)
+
+    b += note(570, 130, 480, 390, BLUE, rot=0.6)
+    b += t(600, 172, "Self-RAG", size=20, weight=800)
+    b += t(600, 198, "the model checks ITSELF, step by step", size=14, weight=700, color=SOFT)
+    qs = [("1", "Do I need to retrieve at all?"), ("2", "Is this chunk relevant?"),
+          ("3", "Is my answer supported by it?"), ("4", "Is my answer useful?")]
+    for i, (n, q) in enumerate(qs):
+        y = 240 + i * 52
+        b += badge(615, y, n, r=13)
+        b += t(640, y + 5, q, size=15)
+    b += t(600, 465, ["The same model answers and critiques,", "trained to emit these checks itself."], size=13.5, color=SOFT, italic=True)
+    svg(W, H, b, "corrective-vs-self-rag", "01-rag", "Corrective RAG grades retrieved chunks with an evaluator and falls back to web search when they are bad; Self-RAG has the same model decide when to retrieve and critique relevance, support and usefulness of its own answer.")
+
+
+def raptor_tree():
+    W, H = 1100, 560
+    b = title(W, "RAPTOR: a tree of summaries", "Build summaries of summaries, then search every level at once.")
+    # level 0 chunks
+    xs = [60 + i * 112 for i in range(8)]
+    for x in xs:
+        b += note(x, 420, 95, 46, YELLOW, rot=0, tape=False)
+        b += t(x + 47, 449, "chunk", size=12.5, anchor="middle")
+    # level 1 summaries
+    groups = [xs[0:3], xs[3:6], xs[6:8]]
+    l1 = [(sum(g) / len(g) + 47 - 50, g) for g in groups]
+    for cx, kids in l1:
+        b += note(cx - 70 + 50, 295, 140, 50, GREEN, rot=0, tape=False)
+        b += t(cx + 50, 325, "summary", size=13, weight=700, anchor="middle")
+        for k in kids:
+            b += f'<path d="M{k + 47},418 L{cx + 50},347" stroke="{SOFT}" stroke-width="1.6"/>'
+    # level 2
+    b += note(430, 170, 240, 56, BLUE, rot=0, tape=False)
+    b += t(550, 204, "summary of summaries", size=14, weight=800, anchor="middle")
+    for cx, _ in l1:
+        b += f'<path d="M{cx + 50},293 L550,228" stroke="{SOFT}" stroke-width="1.6"/>'
+    # labels
+    b += t(1050, 204, "big picture", size=13.5, weight=700, anchor="end", color=SOFT)
+    b += t(1050, 325, "topic level", size=13.5, weight=700, anchor="end", color=SOFT)
+    b += t(1050, 449, "details", size=13.5, weight=700, anchor="end", color=SOFT)
+    b += t(80, 160, "built bottom-up:", size=13.5, weight=700, color=SOFT)
+    b += t(80, 180, "group similar chunks,", size=13, color=SOFT)
+    b += t(80, 198, "summarize, repeat", size=13, color=SOFT)
+    b += note(150, 490, 800, 52, PINK, rot=-0.3, tape=False)
+    b += t(550, 522, '"What is this codebase about?" → top level   ·   "What is the free limit?" → a chunk', size=14.5, weight=800, anchor="middle")
+    svg(W, H, b, "raptor-tree", "01-rag", "RAPTOR groups similar chunks, summarizes each group, then summarizes the summaries, building a tree; big-picture questions match the top summaries and detail questions match chunks.")
+
+
 if __name__ == "__main__":
+    advanced_rag_map()
+    hyde()
+    corrective_vs_self_rag()
+    raptor_tree()
     hybrid_architecture()
     hybrid_combinations()
     inverted_index()

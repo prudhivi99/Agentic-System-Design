@@ -1,6 +1,6 @@
 # 10. Hybrid RAG
 
-> ⏱ 15 min · Prerequisites: [Semantic vs. lexical search](09-semantic-vs-lexical.md) · [← Semantic vs. lexical](09-semantic-vs-lexical.md) · [Learning path](README.md) · Code: [module 04](../../../modules/04-hybridrag/README.md)
+> ⏱ 15 min · Prerequisites: [Semantic vs. lexical search](09-semantic-vs-lexical.md) · [← Semantic vs. lexical](09-semantic-vs-lexical.md) · [Learning path](README.md) · Code: [module 04](../../../modules/04-hybridrag/README.md) · [Next: Advanced RAG patterns →](11-advanced-rag-patterns.md)
 
 ## In one sentence
 
@@ -167,4 +167,4 @@ retriever (tool) to call for each question, and can call again if the result isn
 
 ---
 
-[← Semantic vs. lexical](09-semantic-vs-lexical.md) · [Back to learning path](README.md) · Code: [module 04](../../../modules/04-hybridrag/README.md) · Next: [Agentic AI →](../02-agentic-ai/README.md)
+[← Semantic vs. lexical](09-semantic-vs-lexical.md) · [Back to learning path](README.md) · Code: [module 04](../../../modules/04-hybridrag/README.md) · [Next: Advanced RAG patterns →](11-advanced-rag-patterns.md)

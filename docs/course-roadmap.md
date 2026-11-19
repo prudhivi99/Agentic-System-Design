@@ -16,10 +16,10 @@ The course has 5 sections. This page tracks each topic and links to where it's c
 | Lexical, semantic and hybrid retrieval | ✅ | [Lexical search and BM25](concepts/01-rag/08-lexical-search-and-bm25.md), [Semantic vs. lexical](concepts/01-rag/09-semantic-vs-lexical.md), [Hybrid RAG](concepts/01-rag/10-hybrid-rag.md), modules [03](../modules/03-lexicalrag/README.md) and [04](../modules/04-hybridrag/README.md) |
 | Vector databases, ANN, FAISS, HNSW | ⚪ | |
 | Production RAG architecture | ⚪ | |
-| Advanced RAG patterns | 🟡 | [Hybrid RAG](concepts/01-rag/10-hybrid-rag.md), [Agentic RAG](concepts/02-agentic-ai/03-agentic-rag.md); reranking only mentioned |
+| Advanced RAG patterns | 🟡 | [Advanced RAG patterns](concepts/01-rag/11-advanced-rag-patterns.md) (RAPTOR, HyDE, reranking, CRAG, Self-RAG), [Hybrid RAG](concepts/01-rag/10-hybrid-rag.md); concepts only, no code yet |
 | Metadata filtering and access control | 🟡 | [When to use RAG](concepts/01-rag/05-when-to-use-rag.md) (permissions); module 02 stores `type` / `name` metadata |
 | Freshness, incremental indexing, multi-tenant retrieval | ⚪ | |
-| RAG debugging and optimization | ✅ | [Chunk size and k](concepts/01-rag/04-chunk-size-and-k.md) (incl. the k=1 vs. k=4 example) |
+| RAG debugging and optimization | ✅ | [Chunk size and k](concepts/01-rag/04-chunk-size-and-k.md) (incl. the k=1 vs. k=4 example), [debugging wrong answers](concepts/01-rag/11-advanced-rag-patterns.md#users-say-the-answers-are-wrong-what-would-you-do) |
 | RAG evals | ✅ | [Testing a RAG system](concepts/01-rag/06-evaluating-rag.md), [test cases](../modules/01-rag/test_cases.md) |
 
 ## 2. Context Engineering
