@@ -1,4 +1,13 @@
+"""
+1_semantic_rag.py: ask questions about a codebase. Chunks code by characters, embeds the
+chunks (MiniLM), and lets an agent (gpt-4o-mini) search them.
 
+Run from the repo root (needs OPENAI_API_KEY in .env):
+    uv run modules/01-rag/1_semantic_rag.py                          # sample_project
+    uv run modules/01-rag/1_semantic_rag.py --repo /path/to/repo     # another codebase
+
+Type a question at "You:". Type exit to quit.
+"""
 
 import argparse
 from pathlib import Path
@@ -106,5 +115,10 @@ if __name__ == "__main__":
            stream_mode="values",
        ):
            last_msg = step["messages"][-1]
-           if not getattr(last_msg, "tool_calls", None):
+           # Show each search the agent makes, then only its final answer.
+           # (Tool results, i.e. the raw retrieved chunks, are not printed.)
+           if last_msg.type == "ai" and last_msg.tool_calls:
+               for call in last_msg.tool_calls:
+                   print(f"  🔍 search_codebase({call['args'].get('query', '')!r})")
+           elif last_msg.type == "ai":
                print(f"Agent: {last_msg.content}")

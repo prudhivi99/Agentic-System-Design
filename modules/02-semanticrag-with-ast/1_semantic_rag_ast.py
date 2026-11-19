@@ -1,3 +1,14 @@
+"""
+1_semantic_rag_ast.py: same as module 01, but chunks code with Python's AST
+(one chunk per top-level class or function) instead of by characters.
+
+Run from the repo root (needs OPENAI_API_KEY in .env):
+    uv run modules/02-semanticrag-with-ast/1_semantic_rag_ast.py
+    uv run modules/02-semanticrag-with-ast/1_semantic_rag_ast.py --repo /path/to/repo
+
+Type a question at "You:". Type exit to quit.
+"""
+
 import ast
 import argparse
 from pathlib import Path
@@ -107,7 +118,7 @@ def build_vector_store(chunks: list) -> Chroma:
 
 def build_agent(vector_store: Chroma):
    retriever_tool = create_retriever_tool(
-       vector_store.as_retriever(search_kwargs={"k": 4}),
+       vector_store.as_retriever(search_kwargs={"k": 1}),
        name="search_codebase",
        description="Search the codebase for relevant functions, classes, or logic.",
    )
@@ -157,5 +168,10 @@ if __name__ == "__main__":
            stream_mode="values",
        ):
            last_msg = step["messages"][-1]
-           if not getattr(last_msg, "tool_calls", None):
+           # Show each search the agent makes, then only its final answer.
+           # (Tool results, i.e. the raw retrieved chunks, are not printed.)
+           if last_msg.type == "ai" and last_msg.tool_calls:
+               for call in last_msg.tool_calls:
+                   print(f"  🔍 search_codebase({call['args'].get('query', '')!r})")
+           elif last_msg.type == "ai":
                print(f"Agent: {last_msg.content}")
