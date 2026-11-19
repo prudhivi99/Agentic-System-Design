@@ -13,6 +13,8 @@ explain the "why", not just the "what".
   Theory only; no code needed to understand them.
 - `docs/assets/images/NN-topic/`: images used in the docs.
 - `docs/references.md`: posts, articles and images collected while learning.
+- `docs/course-roadmap.md`: the course's 5 sections. When a topic gets a doc or module, link it
+  there and update its status (✅ / 🟡 / ⚪). The capstone is an AI coding agent (`project/`).
 - `docs/glossary.md`: add new terms here as they come up.
 - `sample_data/`: shared data the exercises run against. Don't edit `sample_project`
   unless asked; it's test input for the RAG/agent exercises.
