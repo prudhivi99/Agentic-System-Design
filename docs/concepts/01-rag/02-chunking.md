@@ -48,6 +48,8 @@ Typical overlap: **10–15% of chunk size**. Our code uses `chunk_size=256, chun
 | **Language-aware** | Like recursive, but knows `class` / `def` for code, `#` headings for Markdown | Code, Markdown | Only as smart as its separator list (see below!) |
 | **By document structure** | One chunk per section / heading / function. For code this is done with an **AST** ([page 7](07-chunking-code-with-ast.md)) | Manuals, docs with headings, code | Sections can be very uneven in size |
 | **Semantic** | Uses embeddings to cut where the topic changes | Long free-flowing text | Slower, more complex |
+| **Table-aware** | Keeps each table's header row with every chunk of its rows | Spreadsheets, tables in PDFs | Needs to detect tables first |
+| **Agentic** | An LLM reads the text and decides where each chunk starts and ends ([page 11](11-advanced-rag-patterns.md)) | Messy documents with no clear structure | One LLM call per document: slow and costly |
 
 ### How the recursive splitter decides where to cut
 

@@ -12,7 +12,7 @@ runnable exercises, and a final project.
 
 ```mermaid
 flowchart LR
-    S["0. Setup<br/>(10 min)"] --> R["1. RAG concepts<br/>(10 short pages)"]
+    S["0. Setup<br/>(10 min)"] --> R["1. RAG concepts<br/>(11 short pages)"]
     R --> M1["Run module 01-rag<br/>+ experiments"]
     M1 --> A["2. Agentic AI concepts<br/>(4 short pages)"]
     A --> P["Final project"]
@@ -47,6 +47,7 @@ topic linked to its doc, with ✅ / 🟡 / ⚪ status. Currently: **week 1, sect
 | 8 | [Lexical search and BM25](docs/concepts/01-rag/08-lexical-search-and-bm25.md) | How does keyword search work? Why does it find exact names? |
 | 9 | [Semantic vs. lexical](docs/concepts/01-rag/09-semantic-vs-lexical.md) | Which search wins which questions? |
 | 10 | [Hybrid RAG](docs/concepts/01-rag/10-hybrid-rag.md) | How do you combine several retrievers, and merge their results? |
+| 11 | [Advanced RAG patterns](docs/concepts/01-rag/11-advanced-rag-patterns.md) | RAPTOR, HyDE, reranking, Corrective RAG, Self-RAG: what does each fix? |
 
 ### 02 – Agentic AI
 
@@ -83,7 +84,7 @@ Agentic-System-Design/
 ├── docs/
 │   ├── setup/             ← environment setup
 │   ├── concepts/
-│   │   ├── 01-rag/        ← RAG learning path (10 pages)
+│   │   ├── 01-rag/        ← RAG learning path (11 pages)
 │   │   └── 02-agentic-ai/ ← Agentic AI learning path (4 pages)
 │   ├── assets/images/     ← pictures used in the docs (e.g. from LinkedIn posts)
 │   ├── templates/         ← template for module READMEs
