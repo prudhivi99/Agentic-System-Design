@@ -818,7 +818,154 @@ def course_roadmap():
     svg(W, H, b, "course-roadmap", "course", "The course has 5 sections: Foundation and Knowledge Systems, Context Engineering, Agent Systems and Harness Engineering, Production AI and LLMOps, and the AI coding agent capstone. Week 1 is section 1.")
 
 
+# ---------------------------------------------------------------------------
+# Diagrams: lexical search, BM25 and hybrid RAG (RAG pages 8 and 9)
+# ---------------------------------------------------------------------------
+def inverted_index():
+    W, H = 1100, 540
+    b = title(W, "The inverted index: word → documents", "3 of the 5 docs from 1_bm25_visualization.py. Built once, then lookups are instant.")
+    docs = [("D0", "create_invoice  generate invoice", "for order  calculate invoice total"),
+            ("D1", "create_payment  process payment", "validate payment method  charge card"),
+            ("D3", "send_invoice  email invoice", "to customer  attach invoice pdf")]
+    b += t(60, 140, "Documents (forward: doc → words)", size=15, weight=800, color=SOFT)
+    for i, (d, l1, l2) in enumerate(docs):
+        y = 160 + i * 100
+        b += note(55, y, 400, 80, "#FFFFFF", rot=(-0.8, 0.6, -0.5)[i], tape=False)
+        b += t(78, y + 32, d, size=16, weight=800, font=MONO, color=ACCENT)
+        b += t(125, y + 32, [l1, l2], size=13, font=MONO)
+    b += arrow(470, 300, 545, 300)
+    b += t(508, 285, "flip it", size=13, weight=700, anchor="middle", color=SOFT)
+
+    b += t(570, 140, "Inverted index (word → docs)", size=15, weight=800, color=SOFT)
+    rows = [("invoice", "D0 (×2) · D3 (×2)", YELLOW), ("payment", "D1 (×2)", "#FFFFFF"),
+            ("customer", "D3", "#FFFFFF"), ("generate", "D0", "#FFFFFF"), ("card", "D1", "#FFFFFF")]
+    for i, (w, ds, col) in enumerate(rows):
+        y = 160 + i * 58
+        b += f'<rect x="570" y="{y}" width="170" height="44" rx="6" fill="{col}" stroke="#00000022"/>'
+        b += t(655, y + 28, w, size=15, weight=800, anchor="middle", font=MONO)
+        b += f'<path d="M745,{y + 22} h30" stroke="{INK}" stroke-width="2" marker-end="url(#head)"/>'
+        b += f'<rect x="782" y="{y}" width="200" height="44" rx="6" fill="{col}" stroke="#00000022"/>'
+        b += t(882, y + 28, ds, size=14, anchor="middle", font=MONO)
+    b += note(560, 462, 470, 56, PINK, rot=-0.4, tape=False)
+    b += t(795, 496, 'query "invoice"  →  look up 1 row  →  D0, D3', size=15, weight=800, anchor="middle", font=MONO)
+    b += t(255, 492, ["Like the index at the back of a book:", "word → pages, so you never read every page."],
+           size=14, anchor="middle", color=SOFT, italic=True)
+    svg(W, H, b, "inverted-index", "01-rag", "Documents are flipped into an inverted index that maps each word to the documents containing it; the query word invoice looks up one row and gets D0 and D3.")
+
+
+def bm25_factors():
+    W, H = 1100, 560
+    b = title(W, "BM25 scores a match with 3 ideas", "For each query word found in a document, then added up over all query words.")
+    cards = [
+        (YELLOW, "Term frequency", "the word appears MORE often", "→ higher score", "…but with diminishing returns:", "the 10th mention adds little"),
+        (GREEN, "Word rarity (IDF)", "the word is RARE across docs", "→ counts more", '"invoice" in 2 of 5 docs: 0.88', '"customer" in 3 of 5 docs: 0.54'),
+        (BLUE, "Length penalty", "the document is LONGER than", "average → score goes down", "long docs contain more words", "by size, not by relevance"),
+    ]
+    for i, (col, head, l1, l2, l3, l4) in enumerate(cards):
+        x = 55 + i * 340
+        b += note(x, 135, 310, 290, col, rot=(-0.8, 0.6, -0.5)[i])
+        b += badge(x + 28, 165, i + 1)
+        b += t(x + 155, 215, head, size=19, weight=800, anchor="middle")
+        b += t(x + 155, 250, [l1, l2], size=14.5, anchor="middle", weight=600)
+        b += f'<path d="M{x + 30},{300} h250" stroke="#00000022"/>'
+        b += t(x + 155, 335, [l3, l4], size=13.5, anchor="middle", color=SOFT, italic=(i != 1), font=MONO if i == 1 else FONT)
+    # small saturation curve on card 1
+    b += f'<path d="M95,{415} Q150,{372} 210,{370} T330,{366}" fill="none" stroke="{ACCENT}" stroke-width="3"/>'
+    b += note(140, 455, 820, 75, "#FFFFFF", rot=0.3, tape=False)
+    b += t(550, 487, "score(doc)  =  Σ over query words:  rarity  ×  frequency (adjusted for length)", size=17, weight=800, anchor="middle", font=MONO)
+    b += t(550, 514, "A word that is not in the document adds 0. No word in common → score 0.", size=14, anchor="middle", color=SOFT)
+    svg(W, H, b, "bm25-three-factors", "01-rag", "BM25 uses term frequency with diminishing returns, word rarity (IDF), and a document length penalty; the score is the sum over query words of rarity times length-adjusted frequency.")
+
+
+def semantic_vs_lexical():
+    W, H = 1100, 600
+    b = title(W, "Semantic vs. lexical search", "Real results from modules 02 and 03: each one wins different questions.")
+    b += note(50, 130, 480, 380, BLUE, rot=-0.6)
+    b += t(80, 172, "Semantic (embeddings)", size=20, weight=800)
+    b += t(80, 198, "matches MEANING", size=14, weight=700, color=SOFT)
+    b += t(80, 236, ["✓  different words, same idea", "✓  synonyms, everyday language", "✗  exact names, IDs, error codes"], size=15)
+    b += note(75, 340, 430, 145, "#FFFFFF", rot=0.5, tape=False)
+    b += t(95, 370, "Example", size=13, weight=800, color=SOFT)
+    b += t(95, 398, ['"generate bill" ≈ "create invoice"', "(same meaning, no shared word)", " ", '"AuthService" with k=1 (module 02)', "→ returned AuthError ✗"], size=13.5, font=MONO)
+
+    b += note(570, 130, 480, 380, YELLOW, rot=0.6)
+    b += t(600, 172, "Lexical (BM25)", size=20, weight=800)
+    b += t(600, 198, "matches exact WORDS", size=14, weight=700, color=SOFT)
+    b += t(600, 236, ["✓  class names, functions, APIs", "✓  error messages, IDs", "✗  synonyms, other wordings"], size=15)
+    b += note(595, 340, 430, 145, "#FFFFFF", rot=-0.5, tape=False)
+    b += t(615, 370, "Example", size=13, weight=800, color=SOFT)
+    b += t(615, 398, ['"AuthService"  →  class AuthService #1 ✓', "(module 03, sample_project)", " ", '"generate bill"  →  send_invoice', "scores 0 (BM25 demo) ✗"], size=13.5, font=MONO)
+
+    b += note(250, 530, 600, 50, GREEN, rot=-0.3, tape=False)
+    b += t(550, 562, "Neither always wins  →  use both: Hybrid RAG", size=18, weight=800, anchor="middle")
+    svg(W, H, b, "semantic-vs-lexical", "01-rag", "Semantic search matches meaning and handles synonyms but misses exact names; lexical BM25 matches exact words like AuthService but misses synonyms. Using both is hybrid RAG.")
+
+
+def hybrid_rag():
+    W, H = 1100, 600
+    b = title(W, "Hybrid RAG: run both searches, merge the results", "Each search finds what the other misses.")
+    b += note(40, 250, 170, 120, PINK, rot=-1)
+    b += i_chat(125, 290)
+    b += t(125, 345, "question", size=15, weight=800, anchor="middle")
+    b += arrow(215, 290, 290, 210) + arrow(215, 330, 290, 410)
+
+    b += note(300, 140, 230, 140, BLUE, rot=0.6)
+    b += i_db(345, 195, 0.9)
+    b += t(445, 190, ["Semantic", "search"], size=15, weight=800, anchor="middle")
+    b += t(415, 255, "vector DB", size=13, anchor="middle", color=SOFT)
+    b += note(300, 340, 230, 140, YELLOW, rot=-0.6)
+    b += i_search(345, 395, 0.9)
+    b += t(445, 390, ["Lexical", "search"], size=15, weight=800, anchor="middle")
+    b += t(415, 455, "BM25 index", size=13, anchor="middle", color=SOFT)
+
+    lists = [(165, ["1  A", "2  B", "3  C"]), (365, ["1  C", "2  A", "3  D"])]
+    for y, items in lists:
+        b += arrow(535, y + 45, 580, y + 45)
+        b += f'<rect x="585" y="{y}" width="110" height="96" rx="8" fill="#FFFFFF" stroke="#00000022"/>'
+        b += t(605, y + 28, items, size=14, font=MONO, weight=700)
+    b += arrow(700, 213, 760, 280) + arrow(700, 413, 760, 340)
+
+    b += note(765, 220, 160, 180, GREEN, rot=0.8)
+    b += t(845, 262, "Merge", size=18, weight=800, anchor="middle")
+    b += t(845, 290, "(e.g. RRF)", size=13, anchor="middle", color=SOFT)
+    b += t(845, 330, ["1  A", "2  C", "3  B", "4  D"], size=14, font=MONO, weight=700, anchor="middle")
+    b += arrow(930, 310, 980, 310)
+    b += i_spark(1020, 300)
+    b += t(1020, 345, "LLM", size=14, weight=800, anchor="middle")
+
+    b += note(140, 512, 820, 66, "#FFFFFF", rot=-0.3, tape=False)
+    b += t(550, 540, "A and C appear in BOTH lists, so they rise to the top.", size=16, weight=800, anchor="middle")
+    b += t(550, 564, "Reciprocal Rank Fusion: each list gives a chunk 1 / (60 + rank) points; add them up.", size=13.5, anchor="middle", color=SOFT)
+    svg(W, H, b, "hybrid-rag", "01-rag", "Hybrid RAG sends the question to semantic search and BM25 lexical search, then merges the two ranked lists with reciprocal rank fusion; chunks found by both rise to the top before going to the LLM.")
+
+
+def hybrid_vs_agentic():
+    W, H = 1100, 500
+    b = title(W, "Two ways to use both searches", "Fixed hybrid pipeline, or let an agent choose.")
+    b += note(50, 130, 480, 330, GREEN, rot=-0.6)
+    b += t(80, 172, "Hybrid RAG  ·  always both", size=19, weight=800)
+    b += i_chat(110, 245) + arrow(140, 235, 200, 205) + arrow(140, 255, 200, 285)
+    b += pill(205, 190, "semantic", size=13)[0] + pill(205, 270, "BM25", size=13)[0]
+    b += arrow(300, 205, 345, 235) + arrow(275, 285, 345, 255)
+    b += pill(350, 230, "merge", size=13, fill=YELLOW)[0]
+    b += t(80, 350, ["• Your code runs both on every question", "• Simple, predictable, one LLM call", "• Pays for both searches every time"], size=15)
+
+    b += note(570, 130, 480, 330, BLUE, rot=0.6)
+    b += t(600, 172, "Agentic RAG  ·  the LLM picks", size=19, weight=800)
+    b += i_chat(630, 245) + arrow(660, 245, 700, 245)
+    b += i_brain(735, 245, 0.9) + t(735, 285, "agent", size=13, weight=700, anchor="middle")
+    b += arrow(765, 228, 815, 200) + arrow(767, 245, 815, 245) + arrow(765, 262, 815, 290)
+    b += pill(820, 186, "semantic_search", size=12.5)[0] + pill(820, 232, "keyword_search", size=12.5)[0] + pill(820, 278, "sql / api …", size=12.5)[0]
+    b += t(600, 350, ['• "AuthService" → keyword_search', '• "why can\'t free users…" → semantic_search', "• Can retry if a result isn't good enough"], size=15)
+    svg(W, H, b, "hybrid-vs-agentic", "01-rag", "Hybrid RAG always runs semantic and BM25 search and merges them; agentic RAG lets the LLM choose which search tool to call for each question.")
+
+
 if __name__ == "__main__":
+    inverted_index()
+    bm25_factors()
+    semantic_vs_lexical()
+    hybrid_rag()
+    hybrid_vs_agentic()
     course_roadmap()
     k_cut_ranked_list()
     ast_tree()
