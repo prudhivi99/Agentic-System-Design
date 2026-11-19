@@ -13,10 +13,10 @@ The course has 5 sections. This page tracks each topic and links to where it's c
 | Topic | Status | Where |
 |---|---|---|
 | Retrieval fundamentals: embeddings, chunking, vector search | ✅ | [Chunking](concepts/01-rag/02-chunking.md), [Embeddings](concepts/01-rag/03-embeddings.md), [Chunk size and k](concepts/01-rag/04-chunk-size-and-k.md), [AST chunking](concepts/01-rag/07-chunking-code-with-ast.md), [module 01](../modules/01-rag/README.md), [module 02](../modules/02-semanticrag-with-ast/README.md) |
-| Lexical, semantic and hybrid retrieval | ✅ | [Lexical search and BM25](concepts/01-rag/08-lexical-search-and-bm25.md), [Hybrid RAG](concepts/01-rag/09-hybrid-rag.md), [module 03](../modules/03-lexicalrag/README.md) (hybrid not coded yet) |
+| Lexical, semantic and hybrid retrieval | ✅ | [Lexical search and BM25](concepts/01-rag/08-lexical-search-and-bm25.md), [Semantic vs. lexical](concepts/01-rag/09-semantic-vs-lexical.md), [Hybrid RAG](concepts/01-rag/10-hybrid-rag.md), modules [03](../modules/03-lexicalrag/README.md) and [04](../modules/04-hybridrag/README.md) |
 | Vector databases, ANN, FAISS, HNSW | ⚪ | |
 | Production RAG architecture | ⚪ | |
-| Advanced RAG patterns | 🟡 | [Agentic RAG](concepts/02-agentic-ai/03-agentic-rag.md); reranking only mentioned |
+| Advanced RAG patterns | 🟡 | [Hybrid RAG](concepts/01-rag/10-hybrid-rag.md), [Agentic RAG](concepts/02-agentic-ai/03-agentic-rag.md); reranking only mentioned |
 | Metadata filtering and access control | 🟡 | [When to use RAG](concepts/01-rag/05-when-to-use-rag.md) (permissions); module 02 stores `type` / `name` metadata |
 | Freshness, incremental indexing, multi-tenant retrieval | ⚪ | |
 | RAG debugging and optimization | ✅ | [Chunk size and k](concepts/01-rag/04-chunk-size-and-k.md) (incl. the k=1 vs. k=4 example) |
@@ -44,7 +44,7 @@ The course has 5 sections. This page tracks each topic and links to where it's c
 | MCP and tool interoperability | ⚪ | |
 | Tool reliability and fallback handling | ⚪ | |
 | Multi-agent architectures | 🟡 | [Use cases § multi-agent](concepts/02-agentic-ai/04-use-cases.md) |
-| Human approvals and state persistence | 🟡 | [Building blocks § guardrails](concepts/02-agentic-ai/02-building-blocks.md) |
+| Human approvals and state persistence | 🟡 | [Building blocks § guardrails](concepts/02-agentic-ai/02-building-blocks.md); call limits in [module 04](../modules/04-hybridrag/README.md) |
 
 ## 4. Production AI Engineering / LLMOps
 
