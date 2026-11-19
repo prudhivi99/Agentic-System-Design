@@ -37,6 +37,8 @@ def t(x, y, text, size=16, weight=400, anchor="start", color=INK, font=FONT, ita
     """One or more lines of text. Pass a list for several lines."""
     lines = text if isinstance(text, list) else [text]
     style = ' font-style="italic"' if italic else ""
+    if font == MONO:
+        style += ' xml:space="preserve"'  # keep code indentation (SVG collapses spaces otherwise)
     out = [f'<text x="{x}" y="{y}" font-family="{font}" font-size="{size}" font-weight="{weight}" '
            f'fill="{color}" text-anchor="{anchor}"{style}>']
     for i, line in enumerate(lines):
@@ -657,7 +659,101 @@ def classic_vs_agentic_rag():
     svg(W, H, b, "classic-vs-agentic-rag", "02-agentic-ai", "Classic RAG searches once with the exact question; agentic RAG lets the LLM decide whether to search, rewrite the query and search several times.")
 
 
+# ---------------------------------------------------------------------------
+# Diagrams: AST chunking (RAG page 7)
+# ---------------------------------------------------------------------------
+def ast_tree():
+    W, H = 1100, 600
+    b = title(W, "AST: code becomes a tree", "Python's ast module reads the structure, not just the characters.")
+
+    # left: the code
+    b += note(50, 140, 430, 300, "#FFFFFF", rot=-0.8)
+    b += t(80, 178, "billing.py (simplified)", size=15, weight=800, color=SOFT)
+    code = [("class BillingService:", PURPLE), ("    def check_task_limit(self, user):", BLUE),
+            ("        if current_count >= limit:", GREEN), ('            raise BillingError("…")', ORANGE)]
+    for i, (line, col) in enumerate(code):
+        y = 205 + i * 52
+        b += f'<rect x="72" y="{y}" width="388" height="36" rx="6" fill="{col}"/>'
+        b += t(84, y + 24, line, size=14, font=MONO, weight=600)
+    b += t(265, 425, "4 lines of text", size=14, anchor="middle", color=SOFT, italic=True)
+
+    b += arrow(495, 290, 575, 290)
+    b += t(535, 275, "ast.parse()", size=14, weight=800, anchor="middle", font=MONO)
+
+    # right: the tree
+    nodes = [(810, 150, "Module", "the whole file", "#F3F4F6"),
+             (810, 245, "ClassDef", "BillingService", PURPLE),
+             (810, 340, "FunctionDef", "check_task_limit", BLUE),
+             (700, 440, "If", "current_count >= limit", GREEN),
+             (920, 440, "arguments", "self, user", "#F3F4F6")]
+    for x, y, kind, name, col in nodes:
+        b += note(x - 95, y, 190, 62, col, rot=0, tape=False)
+        b += t(x, y + 26, kind, size=16, weight=800, anchor="middle", font=MONO)
+        b += t(x, y + 48, name, size=12.5, anchor="middle", color=SOFT, font=MONO)
+    b += note(605, 530, 190, 52, ORANGE, rot=0, tape=False)
+    b += t(700, 554, "Raise", size=16, weight=800, anchor="middle", font=MONO)
+    b += t(700, 573, "BillingError", size=12.5, anchor="middle", color=SOFT, font=MONO)
+    for x1, y1, x2, y2 in [(810, 212, 810, 243), (810, 307, 810, 338), (790, 402, 720, 438), (830, 402, 900, 438), (700, 502, 700, 528)]:
+        b += f'<path d="M{x1},{y1} L{x2},{y2}" stroke="{INK}" stroke-width="2.2"/>'
+    b += t(1050, 278, ["each box", "= a node"], size=13.5, anchor="end", color=SOFT, italic=True)
+    b += t(265, 480, ["Same colour = same piece of code.", "The tree knows where each", "class and function starts and ends."],
+           size=14.5, weight=700, anchor="middle")
+    svg(W, H, b, "ast-tree", "01-rag", "ast.parse turns four lines of billing.py into a tree: Module, ClassDef BillingService, FunctionDef check_task_limit, If, Raise.")
+
+
+def ast_vs_characters():
+    W, H = 1100, 600
+    b = title(W, "Chunking code: by characters vs. by AST", "Same function, check_task_limit (531 characters).")
+
+    b += note(50, 130, 480, 420, PINK, rot=-0.6)
+    b += cross(90, 168)
+    b += t(115, 175, "By characters  (module 01, size 256)", size=18, weight=800)
+    pieces = [("def check_task_limit(self, user):", "  plan = self.get_plan(user)", "  limit = TASK_LIMITS.get(…)"),
+              ("current_count = len(…)", "  if current_count >= limit:", "    raise BillingError("),
+              ('"Upgrade your plan_tier…"', "", "")]
+    for i, lines in enumerate(pieces):
+        y = 205 + i * 92
+        b += note(85, y, 300, 78, "#FFFFFF", rot=(-1.2, 1, -0.8)[i], tape=False)
+        b += t(100, y + 24, [l for l in lines if l], size=12.5, font=MONO)
+        b += t(400, y + 44, f"piece {i + 1}", size=13, weight=700, color=SOFT)
+    b += f'<path d="M80,{290} h330 M80,{382} h330" stroke="{BAD}" stroke-width="2.5" stroke-dasharray="7 5"/>'
+    b += t(80, 510, ["Cut wherever the size runs out.", "Piece 2 has the check but not the name."], size=14.5, weight=700, color=BAD)
+
+    b += note(570, 130, 480, 420, GREEN, rot=0.6)
+    b += check(610, 168)
+    b += t(635, 175, "By AST  (module 02)", size=18, weight=800)
+    b += note(605, 205, 410, 150, "#FFFFFF", rot=0.6, tape=False)
+    b += t(622, 232, ["class BillingService:", "  def check_task_limit(self, user):", "    plan = self.get_plan(user)",
+                      "    if current_count >= limit:", "      raise BillingError(…)", "  def usage_summary(self, user): …"],
+           size=12.5, font=MONO)
+    b += t(1005, 232, "1 chunk", size=13, weight=700, anchor="end", color=GOOD)
+    b += pill(605, 372, "type: class", size=13)[0] + pill(730, 372, "name: BillingService", size=13)[0]
+    b += t(600, 440, ["Cut where the code says a unit ends:", "a whole class or a whole function.", "Each chunk also gets its type and name."],
+           size=14.5, weight=700, color=GOOD)
+    svg(W, H, b, "ast-vs-character-chunking", "01-rag", "By characters, check_task_limit is cut into three pieces; by AST, the whole BillingService class is one chunk with its type and name.")
+
+
+def ast_uses():
+    W, H = 1100, 400
+    b = title(W, "Where else are ASTs used?", "Any tool that needs to UNDERSTAND code, not just read text.")
+    cards = [(i_spark, "Compilers and interpreters", "turn code into something", "the computer runs", BLUE),
+             (i_shield, "Linters and checkers", "spot bugs and style", "problems (e.g. Ruff)", GREEN),
+             (i_wrench, "IDEs", "autocomplete, rename,", "go to definition", PURPLE),
+             (i_search, "Code RAG (us!)", "cut code into whole", "classes and functions", YELLOW)]
+    for i, (icon, head, l1, l2, col) in enumerate(cards):
+        x = 50 + i * 255
+        b += note(x, 130, 235, 230, col, rot=(-0.8, 0.6, -0.5, 0.8)[i])
+        b += badge(x + 26, 158, i + 1, r=14)
+        b += icon(x + 117, 205)
+        b += t(x + 117, 265, head, size=16, weight=800, anchor="middle")
+        b += t(x + 117, 295, [l1, l2], size=13.5, anchor="middle", color=SOFT)
+    svg(W, H, b, "ast-uses", "01-rag", "ASTs are used by compilers and interpreters, linters, IDEs, and code RAG.")
+
+
 if __name__ == "__main__":
+    ast_tree()
+    ast_vs_characters()
+    ast_uses()
     rag_overview()
     with_without_rag()
     chunking()

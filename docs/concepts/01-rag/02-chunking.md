@@ -46,7 +46,7 @@ Typical overlap: **10–15% of chunk size**. Our code uses `chunk_size=256, chun
 | **Fixed size** | Every N characters, no matter what | Quick experiments | Cuts words and sentences in half |
 | **Recursive** (what we use) | Tries big natural breaks first (blank lines), then smaller ones (lines, spaces) | Most text | Still only counts characters |
 | **Language-aware** | Like recursive, but knows `class` / `def` for code, `#` headings for Markdown | Code, Markdown | Only as smart as its separator list (see below!) |
-| **By document structure** | One chunk per section / heading / function | Manuals, docs with headings, code | Sections can be very uneven in size |
+| **By document structure** | One chunk per section / heading / function. For code this is done with an **AST** ([page 7](07-chunking-code-with-ast.md)) | Manuals, docs with headings, code | Sections can be very uneven in size |
 | **Semantic** | Uses embeddings to cut where the topic changes | Long free-flowing text | Slower, more complex |
 
 ### How the recursive splitter decides where to cut

@@ -193,7 +193,7 @@ Sometimes no combination works well. That's a sign the problem isn't the numbers
 
 | Symptom | Real fix (not a number) |
 |---|---|
-| Functions are always cut in half | Split by structure (one chunk per function). See the [separator surprise](02-chunking.md#-a-real-surprise-in-our-code). |
+| Functions are always cut in half | Split by structure (one chunk per function) with an AST: [Chunking code with AST](07-chunking-code-with-ast.md). See also the [separator surprise](02-chunking.md#-a-real-surprise-in-our-code). |
 | Exact names (`check_task_limit`) aren't found | Add keyword search: **hybrid search** |
 | The right chunk is found but ranked 7th | Add a **reranker** (a second model that re-sorts the top results) |
 | The LLM mixes up files | Put the file name in each chunk's text or metadata |
