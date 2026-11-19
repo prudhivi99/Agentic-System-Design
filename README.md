@@ -1,43 +1,88 @@
 # Agentic System Design
 
-My learning repo for the **Agentic System Design** course: notes, runnable exercises,
-and a final project.
+My learning repo for a **Gen AI / Agentic System Design** course: concept notes with diagrams,
+runnable exercises, and a final project.
 
-## Repo layout
+> **Written for beginners, including future me.** Every concept page explains *why* before
+> *how*, uses diagrams and real examples from our code, and ends with **"Check yourself"**
+> questions (click to reveal the answer). If something doesn't click, run the code and come
+> back; it gets clearer each time.
 
-```
-Agentic-System-Design/
-├── README.md            ← you are here (index of everything)
-├── CLAUDE.md            ← instructions Claude Code reads automatically
-├── pyproject.toml       ← one shared Python environment (uv)
-├── .env.example         ← API key names (copy to .env)
-├── docs/
-│   ├── setup/           ← environment setup
-│   ├── concepts/        ← theory notes, one per topic
-│   ├── templates/       ← template for module READMEs
-│   └── glossary.md      ← terms and definitions
-├── modules/             ← one numbered folder per course module (code + notes)
-├── sample_data/         ← shared data the exercises run against
-└── project/             ← final capstone project
+## 🧭 Start here
+
+```mermaid
+flowchart LR
+    S["0. Setup<br/>(10 min)"] --> R["1. RAG concepts<br/>(6 short pages)"]
+    R --> M1["Run module 01-rag<br/>+ experiments"]
+    M1 --> A["2. Agentic AI concepts<br/>(4 short pages)"]
+    A --> P["Final project"]
 ```
 
-## Getting started
+| Step | What | Link |
+|---|---|---|
+| 0 | Install tools and run your first script | [Environment setup](docs/setup/environment.md) |
+| 1 | Learn RAG: why, chunking, embeddings, chunk size and k, when (not) to use, testing | [RAG learning path](docs/concepts/01-rag/README.md) |
+| 2 | Run the RAG agent and do the experiments | [Module 01 – RAG](modules/01-rag/README.md) |
+| 3 | Learn agents: the loop, building blocks, agentic RAG, use cases | [Agentic AI learning path](docs/concepts/02-agentic-ai/README.md) |
+| 4 | Build the final project | [Project](project/README.md) |
 
-See [docs/setup/environment.md](docs/setup/environment.md).
+Stuck on a word? → [Glossary](docs/glossary.md)
 
-## Modules
+## 📚 Concepts
+
+### 01 – RAG (Retrieval-Augmented Generation)
+
+| # | Page | Key question it answers |
+|---|---|---|
+| 1 | [Why RAG?](docs/concepts/01-rag/01-why-rag.md) | What problem does RAG solve? With vs. without RAG |
+| 2 | [Chunking](docs/concepts/01-rag/02-chunking.md) | Why cut documents into pieces? How? |
+| 3 | [Embeddings and vector search](docs/concepts/01-rag/03-embeddings.md) | How does "search by meaning" work? |
+| 4 | [Chunk size and k](docs/concepts/01-rag/04-chunk-size-and-k.md) | What happens with small/big chunks and small/big k? How to choose? |
+| 5 | [When to use RAG, and when not](docs/concepts/01-rag/05-when-to-use-rag.md) | RAG vs. SQL, APIs, grep, long context; use cases by industry |
+| 6 | [Testing a RAG system](docs/concepts/01-rag/06-evaluating-rag.md) | How do I know a change made it better? |
+
+### 02 – Agentic AI
+
+| # | Page | Key question it answers |
+|---|---|---|
+| 1 | [What is an agent?](docs/concepts/02-agentic-ai/01-what-is-an-agent.md) | LLM call vs. workflow vs. agent; the agent loop |
+| 2 | [Building blocks](docs/concepts/02-agentic-ai/02-building-blocks.md) | Model, instructions, tools, memory, planning, guardrails |
+| 3 | [Agentic RAG](docs/concepts/02-agentic-ai/03-agentic-rag.md) | How is it different from classic RAG? |
+| 4 | [Use cases](docs/concepts/02-agentic-ai/04-use-cases.md) | Where agents shine, and when NOT to use one |
+
+## 🧪 Modules (code + experiments)
 
 | # | Module | Notes | Code | Status |
 |---|--------|-------|------|--------|
-| 01 | RAG | [README](modules/01-rag/README.md) | [1_semantic_rag.py](modules/01-rag/1_semantic_rag.py), [2_eval_rag.py](modules/01-rag/2_eval_rag.py) | 🟡 In progress |
+| 01 | RAG | [README](modules/01-rag/README.md) · [test cases](modules/01-rag/test_cases.md) | [1_semantic_rag.py](modules/01-rag/1_semantic_rag.py), [2_eval_rag.py](modules/01-rag/2_eval_rag.py) | 🟡 In progress |
 
 <!-- Add a row per module: | 02 | Agents | [README](modules/02-agents/README.md) | ... | ⚪ Not started | -->
 
-## Concepts
+## 🔗 References
 
-- [01 – RAG: when to use it and when not to](docs/concepts/01-rag.md)
-- [Glossary](docs/glossary.md)
+Good LinkedIn posts, articles and images collected along the way: [docs/references.md](docs/references.md).
 
-## Final project
+## 📁 Repo layout
 
-See [project/README.md](project/README.md).
+```
+Agentic-System-Design/
+├── README.md              ← you are here
+├── CLAUDE.md              ← instructions Claude Code reads automatically
+├── pyproject.toml, uv.lock← one shared Python environment (uv)
+├── .env.example           ← API key names (copy to .env)
+├── docs/
+│   ├── setup/             ← environment setup
+│   ├── concepts/
+│   │   ├── 01-rag/        ← RAG learning path (6 pages)
+│   │   └── 02-agentic-ai/ ← Agentic AI learning path (4 pages)
+│   ├── assets/images/     ← pictures used in the docs (e.g. from LinkedIn posts)
+│   ├── templates/         ← template for module READMEs
+│   ├── references.md      ← collected posts and articles
+│   └── glossary.md        ← terms and definitions
+├── modules/               ← one numbered folder per course module (code + notes)
+├── sample_data/           ← shared data the exercises run against
+└── project/               ← final capstone project
+```
+
+> 💡 Diagrams use **Mermaid**, which GitHub draws as pictures automatically. In VS Code, install
+> the "Markdown Preview Mermaid Support" extension to see them in the preview.

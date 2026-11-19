@@ -18,6 +18,7 @@ from langchain.agents import create_agent
 
 
 CHUNK_SIZE = 256
+CHUNK_OVERLAP = 32
 TOP_K = 5
 EMBED_MODEL = "all-MiniLM-L6-v2"
 
@@ -32,11 +33,11 @@ def load_codebase(repo_path: str) -> list:
 
 
 
-def chunk_code(docs: list, chunk_size: int = CHUNK_SIZE) -> list:
+def chunk_code(docs: list, chunk_size: int = CHUNK_SIZE, chunk_overlap: int = CHUNK_OVERLAP) -> list:
    splitter = RecursiveCharacterTextSplitter.from_language(
        language=Language.PYTHON,
        chunk_size=chunk_size,
-       chunk_overlap=32,
+       chunk_overlap=chunk_overlap,
    )
    return splitter.split_documents(docs)
 

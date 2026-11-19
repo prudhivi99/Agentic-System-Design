@@ -9,6 +9,7 @@ chunks came back. A good-looking answer can hide bad retrieval, and the other wa
 Run from the repo root:
     uv run modules/01-rag/2_eval_rag.py                          # all tests, default config
     uv run modules/01-rag/2_eval_rag.py --chunk-size 512 --k 2   # one experiment
+    uv run modules/01-rag/2_eval_rag.py --overlap 0              # overlap (default ~12% of chunk)
     uv run modules/01-rag/2_eval_rag.py --only T5 T7             # just some tests
     uv run modules/01-rag/2_eval_rag.py --retrieval-only         # no LLM, no API cost
     uv run modules/01-rag/2_eval_rag.py --save                   # also write results/<config>.md
@@ -238,6 +239,8 @@ def main():
     parser = argparse.ArgumentParser(description="Run the RAG test questions.")
     parser.add_argument("--chunk-size", type=int, default=rag.CHUNK_SIZE)
     parser.add_argument("--k", type=int, default=rag.TOP_K)
+    parser.add_argument("--overlap", type=int, default=None,
+                        help="chunk overlap in chars (default: 32, or ~12%% of a bigger chunk size)")
     parser.add_argument("--model", default=rag.EMBED_MODEL, help="HuggingFace embedding model")
     parser.add_argument("--only", nargs="+", metavar="ID", help="e.g. --only T5 T7")
     parser.add_argument("--retrieval-only", action="store_true",
@@ -253,8 +256,14 @@ def main():
         if not cases:
             parser.error(f"no test with id in {args.only}")
 
+    # Overlap should grow with chunk size (~10-15%). A fixed 32 is 12.5% of 256 but only
+    # 3% of 1024, which would make the bigger-chunk runs unfair.
+    if args.overlap is None:
+        args.overlap = max(rag.CHUNK_OVERLAP, args.chunk_size // 8)
+
     repo_path = Path(args.repo).resolve()
-    chunks = rag.chunk_code(rag.load_codebase(str(repo_path)), chunk_size=args.chunk_size)
+    chunks = rag.chunk_code(rag.load_codebase(str(repo_path)),
+                            chunk_size=args.chunk_size, chunk_overlap=args.overlap)
     vector_store = rag.build_vector_store(chunks, model_name=args.model)
     agent = None if args.retrieval_only else rag.build_agent(vector_store, k=args.k)
 
@@ -262,7 +271,7 @@ def main():
     lines = [
         f"# RAG eval: chunk={args.chunk_size}, k={args.k}, model={args.model}",
         "",
-        f"- Date: {date.today()}  ·  Mode: {mode}  ·  Chunks: {len(chunks)} (overlap 32)",
+        f"- Date: {date.today()}  ·  Mode: {mode}  ·  Chunks: {len(chunks)} (overlap {args.overlap})",
         f"- Context per search ≈ k × chunk_size = {args.k * args.chunk_size} chars",
         "",
         "---",
@@ -287,7 +296,7 @@ def main():
     if args.save:
         model_slug = args.model.replace("/", "-")
         suffix = "_retrieval" if args.retrieval_only else ""
-        path = HERE / "results" / f"chunk{args.chunk_size}_k{args.k}_{model_slug}{suffix}.md"
+        path = HERE / "results" / f"chunk{args.chunk_size}_o{args.overlap}_k{args.k}_{model_slug}{suffix}.md"
         path.parent.mkdir(exist_ok=True)
         path.write_text(report + "\n", encoding="utf-8")
         print(f"\nSaved → {path.relative_to(HERE.parents[1])}")

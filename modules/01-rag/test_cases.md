@@ -5,7 +5,7 @@ Ask the **same questions** under every config (chunk size, k, embedding model) a
 Without a fixed set you're comparing different questions, not different configs.
 
 The questions also live in [2_eval_rag.py](2_eval_rag.py) (`TEST_CASES`). Keep the two in sync.
-Theory behind this: [concepts/01-rag.md § Tuning retrieval](../../docs/concepts/01-rag.md#tuning-retrieval-chunk-size-and-k).
+Theory behind this: [Chunk size and k](../../docs/concepts/01-rag/04-chunk-size-and-k.md).
 
 ```
  Test group           What it stresses           Knob that should matter most
@@ -27,7 +27,7 @@ uv run modules/01-rag/2_eval_rag.py --retrieval-only                # free: no L
 uv run modules/01-rag/2_eval_rag.py --only T5 T7                    # just a few tests
 ```
 
-`--save` writes `results/chunk<size>_k<k>_<model>.md`. Open it, tick the facts, and fill in the
+`--save` writes `results/chunk<size>_o<overlap>_k<k>_<model>.md`. Open it, tick the facts, and fill in the
 summary table at the bottom.
 
 ## Why chunk size matters for these tests
@@ -144,7 +144,7 @@ Step 2: fill in the chunk hits (of 10):
 Step 3: pick the **smallest** chunk size and k that are still near the top. Then run the agent
 (without `--retrieval-only`) on just those settings and check the answers.
 
-Why: [concepts/01-rag.md § How to choose both](../../docs/concepts/01-rag.md#how-to-choose-both-measure-dont-guess).
+Why: [Chunk size and k § So what are the best values?](../../docs/concepts/01-rag/04-chunk-size-and-k.md#so-what-are-the-best-values).
 
 ## My results
 
