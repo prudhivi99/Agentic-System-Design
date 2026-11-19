@@ -55,6 +55,7 @@ Stuck on a word? → [Glossary](docs/glossary.md)
 | # | Module | Notes | Code | Status |
 |---|--------|-------|------|--------|
 | 01 | RAG | [README](modules/01-rag/README.md) · [test cases](modules/01-rag/test_cases.md) | [1_semantic_rag.py](modules/01-rag/1_semantic_rag.py), [2_eval_rag.py](modules/01-rag/2_eval_rag.py) | 🟡 In progress |
+| 02 | Semantic RAG with AST chunking | [README](modules/02-semanticrag-with-ast/README.md) | [1_semantic_rag_ast.py](modules/02-semanticrag-with-ast/1_semantic_rag_ast.py) | 🟡 In progress |
 
 <!-- Add a row per module: | 02 | Agents | [README](modules/02-agents/README.md) | ... | ⚪ Not started | -->
 
