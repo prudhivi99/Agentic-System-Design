@@ -903,7 +903,7 @@ def semantic_vs_lexical():
 
 def hybrid_rag():
     W, H = 1100, 600
-    b = title(W, "Hybrid RAG: run both searches, merge the results", "Each search finds what the other misses.")
+    b = title(W, "Lexical + semantic hybrid (module 04)", "Run both searches, then merge the two ranked lists.")
     b += note(40, 250, 170, 120, PINK, rot=-1)
     b += i_chat(125, 290)
     b += t(125, 345, "question", size=15, weight=800, anchor="middle")
@@ -927,7 +927,7 @@ def hybrid_rag():
 
     b += note(765, 220, 160, 180, GREEN, rot=0.8)
     b += t(845, 262, "Merge", size=18, weight=800, anchor="middle")
-    b += t(845, 290, "(e.g. RRF)", size=13, anchor="middle", color=SOFT)
+    b += t(845, 290, "(weighted RRF)", size=13, anchor="middle", color=SOFT)
     b += t(845, 330, ["1  A", "2  C", "3  B", "4  D"], size=14, font=MONO, weight=700, anchor="middle")
     b += arrow(930, 310, 980, 310)
     b += i_spark(1020, 300)
@@ -935,7 +935,7 @@ def hybrid_rag():
 
     b += note(140, 512, 820, 66, "#FFFFFF", rot=-0.3, tape=False)
     b += t(550, 540, "A and C appear in BOTH lists, so they rise to the top.", size=16, weight=800, anchor="middle")
-    b += t(550, 564, "Reciprocal Rank Fusion: each list gives a chunk 1 / (60 + rank) points; add them up.", size=13.5, anchor="middle", color=SOFT)
+    b += t(550, 564, "Each list gives a chunk  weight / (60 + rank)  points; add them up. Equal weights shown.", size=13.5, anchor="middle", color=SOFT)
     svg(W, H, b, "hybrid-rag", "01-rag", "Hybrid RAG sends the question to semantic search and BM25 lexical search, then merges the two ranked lists with reciprocal rank fusion; chunks found by both rise to the top before going to the LLM.")
 
 
@@ -960,7 +960,57 @@ def hybrid_vs_agentic():
     svg(W, H, b, "hybrid-vs-agentic", "01-rag", "Hybrid RAG always runs semantic and BM25 search and merges them; agentic RAG lets the LLM choose which search tool to call for each question.")
 
 
+def hybrid_architecture():
+    W, H = 1100, 560
+    b = title(W, "Hybrid RAG is an architecture, not one technique", "Several retrievers, each with a different strength, merged into one final context.")
+    b += note(40, 215, 160, 120, PINK, rot=-1)
+    b += i_chat(120, 255)
+    b += t(120, 310, "question", size=15, weight=800, anchor="middle")
+    rets = [(140, YELLOW, "Retriever 1", "e.g. lexical: exact words"),
+            (255, BLUE, "Retriever 2", "e.g. semantic: meaning"),
+            (370, GREEN, "Retriever N", "graph, SQL, another model…")]
+    for y, col, name, strength in rets:
+        b += arrow(205, 275, 285, y + 40, bend=0)
+        b += note(290, y, 290, 82, col, rot=0, tape=False)
+        b += t(312, y + 33, name, size=16, weight=800)
+        b += t(312, y + 60, strength, size=13.5, color=SOFT)
+        b += arrow(585, y + 40, 665, 275)
+    b += note(670, 205, 170, 140, ORANGE, rot=0.8)
+    b += t(755, 262, ["Merge", "+ rank"], size=17, weight=800, anchor="middle")
+    b += t(755, 318, "e.g. RRF", size=13, anchor="middle", color=SOFT)
+    b += arrow(845, 275, 895, 275)
+    b += note(900, 215, 160, 120, "#FFFFFF", rot=-0.8)
+    b += i_stack(960, 258, 0.8)
+    b += t(980, 310, "final context", size=14, weight=800, anchor="middle")
+    b += t(980, 365, "→ LLM", size=15, weight=800, anchor="middle")
+    b += note(150, 485, 800, 48, YELLOW, rot=-0.3, tape=False)
+    b += t(550, 516, "Each retriever covers what the others miss.", size=17, weight=800, anchor="middle")
+    svg(W, H, b, "hybrid-architecture", "01-rag", "Hybrid RAG sends the question to several retrievers with different strengths, then merges and ranks their results into one final context for the LLM.")
+
+
+def hybrid_combinations():
+    W, H = 1100, 470
+    b = title(W, "Hybrid retrieval can combine any approaches", "Pick retrievers whose strengths cover each other's gaps.")
+    cards = [(YELLOW, i_search, "Lexical + Semantic", "exact names + meaning", "most common · module 04", True),
+             (GREEN, i_map, "Semantic + Graph", "meaning + relationships", '"who calls what?"', False),
+             (BLUE, i_table, "Semantic + SQL", "meaning + exact numbers", '"tasks per plan tier"', False),
+             (PURPLE, i_stack, "Several vector retrievers", "different embedding models", "e.g. text model + code model", False)]
+    for i, (col, icon, head, l1, l2, star) in enumerate(cards):
+        x = 45 + i * 260
+        b += note(x, 130, 240, 290, col, rot=(-0.8, 0.6, -0.5, 0.8)[i])
+        b += badge(x + 26, 158, i + 1, r=14)
+        b += icon(x + 120, 210)
+        b += t(x + 120, 280, head, size=16.5, weight=800, anchor="middle")
+        b += t(x + 120, 310, l1, size=14, anchor="middle", weight=600)
+        b += t(x + 120, 350, l2, size=13, anchor="middle", color=ACCENT if star else SOFT, italic=not star, weight=700 if star else 400)
+        if star:
+            b += i_spark(x + 210, 158, 0.75, fill=ACCENT)
+    svg(W, H, b, "hybrid-combinations", "01-rag", "Four example hybrid combinations: lexical plus semantic (most common, module 04), semantic plus graph, semantic plus SQL, and several vector retrievers with different embedding models.")
+
+
 if __name__ == "__main__":
+    hybrid_architecture()
+    hybrid_combinations()
     inverted_index()
     bm25_factors()
     semantic_vs_lexical()

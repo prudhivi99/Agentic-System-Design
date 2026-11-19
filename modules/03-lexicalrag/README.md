@@ -1,7 +1,7 @@
 # Module 03 – Lexical RAG (BM25)
 
 > 📚 **Read first: [Lexical search and BM25](../../docs/concepts/01-rag/08-lexical-search-and-bm25.md)**,
-> then [Semantic vs. lexical, and Hybrid RAG](../../docs/concepts/01-rag/09-hybrid-rag.md).
+> then [Semantic vs. lexical](../../docs/concepts/01-rag/09-semantic-vs-lexical.md).
 
 ## 1. What problem does this solve?
 
@@ -62,7 +62,7 @@ Compare with semantic search (modules 01, 02) on the same questions:
 ## 7. Questions I still have
 
 - Should the tokenizer also split `CamelCase` (`AuthService` → `auth`, `service`)?
-- How do I combine BM25 with semantic search? (→ [Hybrid RAG](../../docs/concepts/01-rag/09-hybrid-rag.md))
+- How do I combine BM25 with semantic search? (→ [Hybrid RAG](../../docs/concepts/01-rag/10-hybrid-rag.md), [module 04](../04-hybridrag/README.md))
 - ✍️ TODO
 
 ## 8. How this could be used in my final project

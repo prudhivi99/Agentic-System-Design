@@ -16,7 +16,7 @@ page that explains the term in depth.
 | **Retriever** | Component that takes a query and returns relevant chunks. |
 | **Semantic search** | Search by meaning, not exact words. |
 | **Keyword / lexical search** | Search by exact words (grep, BM25). See [Lexical search and BM25](concepts/01-rag/08-lexical-search-and-bm25.md). |
-| **Hybrid search / Hybrid RAG** | Run semantic and keyword (BM25) search, then merge the results. See [Hybrid RAG](concepts/01-rag/09-hybrid-rag.md). |
+| **Hybrid RAG** | A retrieval architecture that runs several retrieval strategies (e.g. lexical + semantic) and merges their results. "Hybrid search" usually means lexical + semantic. See [Hybrid RAG](concepts/01-rag/10-hybrid-rag.md). |
 | **Agent** | An LLM in a loop that decides which tools to call and when, until the task is done. See [What is an agent?](concepts/02-agentic-ai/01-what-is-an-agent.md). |
 | **Tool** | A function the agent can call (search, API, run code). |
 | **Agentic search** | The agent explores data itself with tools (grep, read file) instead of a pre-built index. |
@@ -60,6 +60,8 @@ page that explains the term in depth.
 | **Term frequency (TF)** | How often a word appears in a document. More is better, with diminishing returns. |
 | **IDF (Inverse Document Frequency)** | Word rarity: words found in few documents count more. |
 | **Lexical gap** | When the query and the document use different words for the same idea ("bill" vs. "invoice"), so keyword search misses it. |
-| **Reciprocal Rank Fusion (RRF)** | Merging ranked lists by giving each item `1 / (60 + rank)` points per list and adding them up. |
+| **Reciprocal Rank Fusion (RRF)** | Merging ranked lists by giving each item `weight / (60 + rank)` points per list and adding them up. Uses ranks, not scores. |
 | **Query routing** | Choosing which search or data source to use for each question, often done by the LLM (agentic RAG). |
 | **Graph RAG** | Retrieval over a knowledge graph (entities and their relationships) instead of text chunks. |
+| **EnsembleRetriever** | LangChain's retriever that runs several retrievers and merges their results with weighted RRF (module 04). |
+| **Middleware (agent)** | Code that runs around each LLM or tool call, e.g. to limit how many calls an agent may make (module 04's guardrails). |

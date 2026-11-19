@@ -1,6 +1,6 @@
 # 8. Lexical search and BM25
 
-> ⏱ 15 min · Prerequisites: [Embeddings](03-embeddings.md), [Chunk size and k](04-chunk-size-and-k.md) · [← Chunking code with AST](07-chunking-code-with-ast.md) · [Next: Hybrid RAG →](09-hybrid-rag.md) · Code: [module 03](../../../modules/03-lexicalrag/README.md)
+> ⏱ 15 min · Prerequisites: [Embeddings](03-embeddings.md), [Chunk size and k](04-chunk-size-and-k.md) · [← Chunking code with AST](07-chunking-code-with-ast.md) · [Next: Semantic vs. lexical →](09-semantic-vs-lexical.md) · Code: [module 03](../../../modules/03-lexicalrag/README.md)
 
 ## In one sentence
 
@@ -112,7 +112,7 @@ BM25 only knows **words**, not **meaning**. From `1_bm25_visualization.py`:
 
 Synonyms ("bill" vs. "invoice"), other wordings ("stop users" vs. "limit") and other languages
 all fall into this **lexical gap**. That's exactly what semantic search is good at, which is why
-the next page combines them.
+the next pages compare them and then combine them.
 
 ## Common beginner mistakes
 
@@ -156,4 +156,4 @@ hybrid search) is needed.
 
 ---
 
-[← Chunking code with AST](07-chunking-code-with-ast.md) · [Back to learning path](README.md) · [Next: Hybrid RAG →](09-hybrid-rag.md)
+[← Chunking code with AST](07-chunking-code-with-ast.md) · [Back to learning path](README.md) · [Next: Semantic vs. lexical →](09-semantic-vs-lexical.md)
