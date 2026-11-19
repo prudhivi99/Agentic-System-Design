@@ -1,6 +1,6 @@
 # 6. Testing a RAG system
 
-> ⏱ 10 min · Prerequisites: [Chunk size and k](04-chunk-size-and-k.md) · [← Learning path](README.md) · Next: [run the module](../../../modules/01-rag/README.md)
+> ⏱ 10 min · Prerequisites: [Chunk size and k](04-chunk-size-and-k.md) · [← Learning path](README.md) · Next: [run module 01](../../../modules/01-rag/README.md), then [Chunking code with AST →](07-chunking-code-with-ast.md)
 
 ## In one sentence
 
@@ -121,4 +121,4 @@ Fix it in the prompt.
 
 ---
 
-[← When to use RAG](05-when-to-use-rag.md) · Next: [run the module](../../../modules/01-rag/README.md) and [Agentic AI →](../02-agentic-ai/README.md)
+[← When to use RAG](05-when-to-use-rag.md) · Next: [run module 01](../../../modules/01-rag/README.md), then [Chunking code with AST →](07-chunking-code-with-ast.md)

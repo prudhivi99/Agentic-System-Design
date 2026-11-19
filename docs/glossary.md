@@ -47,3 +47,9 @@ page that explains the term in depth.
 | **Human in the loop** | A person approves or corrects the agent's actions before they take effect. |
 | **Multi-agent system** | Several specialised agents working together, usually coordinated by a planner. |
 | **Tracing** | Recording every LLM call and tool call so you can debug the agent (e.g. LangSmith). |
+| **AST (Abstract Syntax Tree)** | Code turned into a tree of its parts (classes, functions, `if`s…), keeping meaning and dropping formatting. See [Chunking code with AST](concepts/01-rag/07-chunking-code-with-ast.md). |
+| **AST node** | One part of the tree, e.g. `ClassDef`, `FunctionDef`, `If`. Knows its type and the lines where it starts and ends. |
+| **Parser** | The program that reads code and builds the AST (Python: `ast.parse`). |
+| **Decorator** | A `@something` line above a class or function, e.g. `@dataclass`. Not part of the node's source segment in Python's `ast`. |
+| **tree-sitter** | A tool that builds syntax trees for many languages (JavaScript, Java, Go…), not just Python. |
+| **Linter / static analysis** | Tools that find bugs and style problems by inspecting the code's AST without running it (e.g. Ruff, pylint). |

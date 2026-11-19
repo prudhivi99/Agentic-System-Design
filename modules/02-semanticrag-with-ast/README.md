@@ -1,5 +1,9 @@
 # Module 02 – Semantic RAG with AST chunking
 
+> 📚 **Read first: [Chunking code with AST](../../docs/concepts/01-rag/07-chunking-code-with-ast.md)**
+> (what an AST is, why it chunks code better, and what this simple version still misses,
+> measured on `sample_project`). Then run the code and fill in the experiments below.
+
 ## 1. What problem does this solve?
 
 In module 01, the splitter cut code by **character count**, so functions were split in half

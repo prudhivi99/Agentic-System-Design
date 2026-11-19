@@ -12,7 +12,7 @@ runnable exercises, and a final project.
 
 ```mermaid
 flowchart LR
-    S["0. Setup<br/>(10 min)"] --> R["1. RAG concepts<br/>(6 short pages)"]
+    S["0. Setup<br/>(10 min)"] --> R["1. RAG concepts<br/>(7 short pages)"]
     R --> M1["Run module 01-rag<br/>+ experiments"]
     M1 --> A["2. Agentic AI concepts<br/>(4 short pages)"]
     A --> P["Final project"]
@@ -22,7 +22,7 @@ flowchart LR
 |---|---|---|
 | 0 | Install tools and run your first script | [Environment setup](docs/setup/environment.md) |
 | 1 | Learn RAG: why, chunking, embeddings, chunk size and k, when (not) to use, testing | [RAG learning path](docs/concepts/01-rag/README.md) |
-| 2 | Run the RAG agent and do the experiments | [Module 01 – RAG](modules/01-rag/README.md) |
+| 2 | Run the RAG agent and do the experiments | [Module 01 – RAG](modules/01-rag/README.md), then [Module 02 – AST chunking](modules/02-semanticrag-with-ast/README.md) |
 | 3 | Learn agents: the loop, building blocks, agentic RAG, use cases | [Agentic AI learning path](docs/concepts/02-agentic-ai/README.md) |
 | 4 | Build the final project | [Project](project/README.md) |
 
@@ -40,6 +40,7 @@ Stuck on a word? → [Glossary](docs/glossary.md)
 | 4 | [Chunk size and k](docs/concepts/01-rag/04-chunk-size-and-k.md) | What happens with small/big chunks and small/big k? How to choose? |
 | 5 | [When to use RAG, and when not](docs/concepts/01-rag/05-when-to-use-rag.md) | RAG vs. SQL, APIs, grep, long context; use cases by industry |
 | 6 | [Testing a RAG system](docs/concepts/01-rag/06-evaluating-rag.md) | How do I know a change made it better? |
+| 7 | [Chunking code with AST](docs/concepts/01-rag/07-chunking-code-with-ast.md) | What is an AST? Why does it chunk code better? What does it miss? |
 
 ### 02 – Agentic AI
 
@@ -74,7 +75,7 @@ Agentic-System-Design/
 ├── docs/
 │   ├── setup/             ← environment setup
 │   ├── concepts/
-│   │   ├── 01-rag/        ← RAG learning path (6 pages)
+│   │   ├── 01-rag/        ← RAG learning path (7 pages)
 │   │   └── 02-agentic-ai/ ← Agentic AI learning path (4 pages)
 │   ├── assets/images/     ← pictures used in the docs (e.g. from LinkedIn posts)
 │   ├── templates/         ← template for module READMEs

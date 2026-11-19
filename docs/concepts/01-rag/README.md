@@ -12,6 +12,8 @@ flowchart LR
     D --> E["5. When to use RAG, and when not"]
     E --> F["6. Testing a RAG system"]
     F --> G["Run modules/01-rag"]
+    G --> H["7. Chunking code with AST"]
+    H --> I["Run modules/02"]
 ```
 
 | # | Page | You will learn | Time |
@@ -22,6 +24,7 @@ flowchart LR
 | 4 | [Chunk size and k](04-chunk-size-and-k.md) | The two main knobs. What happens in each combination. How to choose. | 15 min |
 | 5 | [When to use RAG](05-when-to-use-rag.md) | When RAG is the right tool, when it isn't, and real use cases. | 15 min |
 | 6 | [Testing a RAG system](06-evaluating-rag.md) | How to prove a change made things better, not just different. | 10 min |
+| 7 | [Chunking code with AST](07-chunking-code-with-ast.md) | What an AST is, why it chunks code better, and what it still gets wrong. Read after running module 01. | 15 min |
 
 ## The whole idea on one page
 
@@ -38,10 +41,11 @@ flowchart LR
 | Embeddings + vector DB | same | `build_vector_store()` |
 | Retrieval with top-k | same | `build_agent()` → `as_retriever(search_kwargs={"k": k})` |
 | Testing | [2_eval_rag.py](../../../modules/01-rag/2_eval_rag.py) | `run_test()` |
+| AST chunking | [1_semantic_rag_ast.py](../../../modules/02-semanticrag-with-ast/1_semantic_rag_ast.py) | `chunk_code()` |
 
 ## Self-check before moving on
 
-After all six pages, you should be able to answer these without looking.
+After all seven pages, you should be able to answer these without looking.
 Each page has its own questions at the bottom, with answers.
 
 - [ ] Why can't the LLM just answer questions about my private documents?
@@ -50,5 +54,6 @@ Each page has its own questions at the bottom, with answers.
 - [ ] What happens when chunks are small **and** k is small?
 - [ ] Give two situations where RAG is the **wrong** tool.
 - [ ] Why can a good-looking answer still hide bad retrieval?
+- [ ] What is an AST, and why does it chunk code better than a character count?
 
 Words you don't know → [glossary](../../glossary.md).
