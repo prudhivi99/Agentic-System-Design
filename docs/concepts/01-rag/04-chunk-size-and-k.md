@@ -135,6 +135,22 @@ Good for **"explain this whole function"** questions (T5, T6).
 | k ⬆ | More likely to include the answer | More noise, cost, latency; more chances to quote the wrong code | Hallucinations on T9, T10 |
 | k ⬇ | Cleaner, cheaper prompts | Right chunk ranked 4th is never seen | File hits ❌ on cross-file tests (T7) |
 
+## Real example: k = 1 vs. k = 4
+
+Search **ranks every chunk** by similarity. `k` only decides where that list is cut.
+
+![Search ranks every chunk; the small AuthError chunk ranked first, so k=1 missed AuthService while k=4 included it](../../assets/images/01-rag/k-cut-ranked-list.svg)
+
+- The tiny `AuthError` chunk (97 chars, all about "auth") **sounded** closer than the big
+  `AuthService` chunk (1,884 chars) that actually **answers** the question.
+- With `k = 1` the agent never saw `AuthService`, so it said "I could not find that".
+- With `k = 4` the right chunk was inside the cut, and the answer was correct.
+
+> 💡 Embeddings are approximate: the best chunk often ranks #2 or #3. **A bigger k is a safety
+> margin.** Questions that need two files (like "trace `complete_task`") need at least 2 chunks,
+> so `k = 1` can't answer them. (Exact ranks 2–4 weren't measured; we only know `AuthService`
+> was inside the top 4.)
+
 ## "So what are the best values?"
 
 **There's no universal best value.** It depends on **how big a typical answer is** in your data.
