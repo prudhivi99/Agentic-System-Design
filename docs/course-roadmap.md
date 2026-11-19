@@ -13,7 +13,7 @@ The course has 5 sections. This page tracks each topic and links to where it's c
 | Topic | Status | Where |
 |---|---|---|
 | Retrieval fundamentals: embeddings, chunking, vector search | ✅ | [Chunking](concepts/01-rag/02-chunking.md), [Embeddings](concepts/01-rag/03-embeddings.md), [Chunk size and k](concepts/01-rag/04-chunk-size-and-k.md), [AST chunking](concepts/01-rag/07-chunking-code-with-ast.md), [module 01](../modules/01-rag/README.md), [module 02](../modules/02-semanticrag-with-ast/README.md) |
-| Lexical, semantic and hybrid retrieval | 🟡 | [Embeddings § keyword vs. embedding search](concepts/01-rag/03-embeddings.md#keyword-search-vs-embedding-search) |
+| Lexical, semantic and hybrid retrieval | ✅ | [Lexical search and BM25](concepts/01-rag/08-lexical-search-and-bm25.md), [Hybrid RAG](concepts/01-rag/09-hybrid-rag.md), [module 03](../modules/03-lexicalrag/README.md) (hybrid not coded yet) |
 | Vector databases, ANN, FAISS, HNSW | ⚪ | |
 | Production RAG architecture | ⚪ | |
 | Advanced RAG patterns | 🟡 | [Agentic RAG](concepts/02-agentic-ai/03-agentic-rag.md); reranking only mentioned |

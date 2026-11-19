@@ -12,7 +12,7 @@ runnable exercises, and a final project.
 
 ```mermaid
 flowchart LR
-    S["0. Setup<br/>(10 min)"] --> R["1. RAG concepts<br/>(7 short pages)"]
+    S["0. Setup<br/>(10 min)"] --> R["1. RAG concepts<br/>(9 short pages)"]
     R --> M1["Run module 01-rag<br/>+ experiments"]
     M1 --> A["2. Agentic AI concepts<br/>(4 short pages)"]
     A --> P["Final project"]
@@ -22,7 +22,7 @@ flowchart LR
 |---|---|---|
 | 0 | Install tools and run your first script | [Environment setup](docs/setup/environment.md) |
 | 1 | Learn RAG: why, chunking, embeddings, chunk size and k, when (not) to use, testing | [RAG learning path](docs/concepts/01-rag/README.md) |
-| 2 | Run the RAG agent and do the experiments | [Module 01 – RAG](modules/01-rag/README.md), then [Module 02 – AST chunking](modules/02-semanticrag-with-ast/README.md) |
+| 2 | Run the RAG agent and do the experiments | [Module 01 – RAG](modules/01-rag/README.md), [Module 02 – AST chunking](modules/02-semanticrag-with-ast/README.md), [Module 03 – Lexical RAG](modules/03-lexicalrag/README.md) |
 | 3 | Learn agents: the loop, building blocks, agentic RAG, use cases | [Agentic AI learning path](docs/concepts/02-agentic-ai/README.md) |
 | 4 | Build the final project | [Project](project/README.md) |
 
@@ -44,6 +44,8 @@ topic linked to its doc, with ✅ / 🟡 / ⚪ status. Currently: **week 1, sect
 | 5 | [When to use RAG, and when not](docs/concepts/01-rag/05-when-to-use-rag.md) | RAG vs. SQL, APIs, grep, long context; use cases by industry |
 | 6 | [Testing a RAG system](docs/concepts/01-rag/06-evaluating-rag.md) | How do I know a change made it better? |
 | 7 | [Chunking code with AST](docs/concepts/01-rag/07-chunking-code-with-ast.md) | What is an AST? Why does it chunk code better? What does it miss? |
+| 8 | [Lexical search and BM25](docs/concepts/01-rag/08-lexical-search-and-bm25.md) | How does keyword search work? Why does it find exact names? |
+| 9 | [Semantic vs. lexical, and Hybrid RAG](docs/concepts/01-rag/09-hybrid-rag.md) | When to use which? How do you combine both? |
 
 ### 02 – Agentic AI
 
@@ -60,6 +62,7 @@ topic linked to its doc, with ✅ / 🟡 / ⚪ status. Currently: **week 1, sect
 |---|--------|-------|------|--------|
 | 01 | RAG | [README](modules/01-rag/README.md) · [test cases](modules/01-rag/test_cases.md) | [1_semantic_rag.py](modules/01-rag/1_semantic_rag.py), [2_eval_rag.py](modules/01-rag/2_eval_rag.py) | 🟡 In progress |
 | 02 | Semantic RAG with AST chunking | [README](modules/02-semanticrag-with-ast/README.md) | [1_semantic_rag_ast.py](modules/02-semanticrag-with-ast/1_semantic_rag_ast.py) | 🟡 In progress |
+| 03 | Lexical RAG (BM25) | [README](modules/03-lexicalrag/README.md) | [1_bm25_visualization.py](modules/03-lexicalrag/1_bm25_visualization.py), [2_lexicalrag.py](modules/03-lexicalrag/2_lexicalrag.py) | 🟡 In progress |
 
 <!-- Add a row per module: | 02 | Agents | [README](modules/02-agents/README.md) | ... | ⚪ Not started | -->
 
@@ -78,7 +81,7 @@ Agentic-System-Design/
 ├── docs/
 │   ├── setup/             ← environment setup
 │   ├── concepts/
-│   │   ├── 01-rag/        ← RAG learning path (7 pages)
+│   │   ├── 01-rag/        ← RAG learning path (9 pages)
 │   │   └── 02-agentic-ai/ ← Agentic AI learning path (4 pages)
 │   ├── assets/images/     ← pictures used in the docs (e.g. from LinkedIn posts)
 │   ├── templates/         ← template for module READMEs

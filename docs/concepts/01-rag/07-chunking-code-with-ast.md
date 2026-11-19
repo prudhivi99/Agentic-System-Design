@@ -1,6 +1,6 @@
 # 7. Chunking code with AST
 
-> ⏱ 15 min · Prerequisites: [Chunking](02-chunking.md), [Chunk size and k](04-chunk-size-and-k.md) · [← Testing a RAG system](06-evaluating-rag.md) · [Learning path](README.md) · Code: [module 02](../../../modules/02-semanticrag-with-ast/README.md)
+> ⏱ 15 min · Prerequisites: [Chunking](02-chunking.md), [Chunk size and k](04-chunk-size-and-k.md) · [← Testing a RAG system](06-evaluating-rag.md) · [Learning path](README.md) · [Next: Lexical search and BM25 →](08-lexical-search-and-bm25.md) · Code: [module 02](../../../modules/02-semanticrag-with-ast/README.md)
 
 ## In one sentence
 
@@ -280,4 +280,4 @@ go to definition, rename), formatters.
 
 ---
 
-[← Testing a RAG system](06-evaluating-rag.md) · [Back to learning path](README.md) · Code: [module 02 →](../../../modules/02-semanticrag-with-ast/README.md)
+[← Testing a RAG system](06-evaluating-rag.md) · [Back to learning path](README.md) · Code: [module 02](../../../modules/02-semanticrag-with-ast/README.md) · [Next: Lexical search and BM25 →](08-lexical-search-and-bm25.md)
