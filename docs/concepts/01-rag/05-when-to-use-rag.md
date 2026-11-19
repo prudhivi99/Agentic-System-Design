@@ -12,16 +12,7 @@ use something simpler when the data is small, structured, live, or just code on 
 Don't ask "should I use RAG?". Ask **"where is the knowledge, and what's the simplest way to
 get it to the model?"**
 
-```mermaid
-flowchart TB
-    Q{"Where does the<br/>answer live?"}
-    Q --> M["In the model's<br/>general knowledge"] --> M2["Plain LLM"]
-    Q --> S["In one small document"] --> S2["Long context:<br/>paste it in"]
-    Q --> F["In local files / code"] --> F2["Agentic search:<br/>grep + read"]
-    Q --> T["In a database / table"] --> T2["Text-to-SQL<br/>or a tool"]
-    Q --> L["In a live system<br/>(price, order status)"] --> L2["API call"]
-    Q --> H["In a HUGE pile of<br/>unstructured text"] --> H2["✅ RAG"]
-```
+![Six places an answer can live and the tool for each; only a huge pile of text needs RAG](../../assets/images/01-rag/where-does-the-answer-live.svg)
 
 ## ✅ When to use RAG
 

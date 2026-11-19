@@ -12,16 +12,7 @@ answers the question, not the whole document.**
 Imagine searching a 300-page book and getting back "the whole book". Technically correct,
 useless in practice. We want **the paragraph** that answers the question.
 
-```
- Without chunking                        With chunking
- ────────────────                        ─────────────
- ┌──────────────────────┐                ┌──────┐┌──────┐┌──────┐
- │ billing.py           │                │chunk1││chunk2││chunk3│ ...
- │ (all 59 lines,       │                └──────┘└──────┘└──────┘
- │  many topics)        │                    ▲
- └──────────────────────┘                    └── only this one is about
-   1 file = 1 search result                      "task limits" → return it
-```
+![billing.py is cut into small pieces, each about one topic; the question matches the TASK_LIMITS piece best](../../assets/images/01-rag/chunking.svg)
 
 There are **four reasons**, and each one matters:
 
@@ -44,17 +35,7 @@ You choose two numbers:
 Without overlap, a sentence that sits on a boundary gets cut in half, and neither piece makes
 sense alone. Overlap repeats a little text at each border:
 
-```
- Text:  [ A A A A A A B B B B B B C C C C C C ]
-
- No overlap:        [A A A A A A] [B B B B B B] [C C C C C C]
-                                ↑ an idea on this border is cut in two
-
- With overlap:      [A A A A A A B]
-                              [A B B B B B B C]
-                                         [B C C C C C C]
-                    ↑ each border is repeated in both pieces
-```
+![Without overlap a check is split between two chunks; with overlap the border text is in both](../../assets/images/01-rag/overlap.svg)
 
 Typical overlap: **10–15% of chunk size**. Our code uses `chunk_size=256, chunk_overlap=32` (12.5%).
 

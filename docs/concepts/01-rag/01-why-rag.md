@@ -34,18 +34,7 @@ A confident wrong answer is called a **hallucination**.
 
 **Question:** "How many tasks can a free user create?" (asked about our `sample_project`)
 
-```mermaid
-flowchart TB
-    subgraph WITHOUT["❌ Without RAG"]
-        direction LR
-        Q1["Question"] --> L1["LLM"] --> A1["'Usually around 5 to 10 tasks,<br/>depending on the app...'<br/>(a guess)"]
-    end
-    subgraph WITH["✅ With RAG"]
-        direction LR
-        Q2["Question"] --> R["Search the code"] --> C["Found in billing.py:<br/>PlanTier.FREE.value: 10"] --> L2["LLM + question"] --> A2["'10 tasks. See TASK_LIMITS<br/>in billing.py'<br/>(grounded + cited)"]
-    end
-    WITHOUT ~~~ WITH
-```
+![Without RAG the LLM guesses; with RAG it looks up billing.py and answers 10 tasks with a citation](../../assets/images/01-rag/with-without-rag.svg)
 
 | | Without RAG | With RAG |
 |---|---|---|

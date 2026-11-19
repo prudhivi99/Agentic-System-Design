@@ -33,6 +33,21 @@ They're connected by one simple formula:
 
 At some point you've stopped *retrieving* and started *dumping*.
 
+## ⚠️ k, chunk size and tokens are NOT the same thing
+
+Beginners often mix these up. They are three different things, in three different units:
+
+![k is how many chunks, chunk size is how big each chunk is in characters, tokens are the text pieces the LLM reads; tokens sent is about k times tokens per chunk](../../assets/images/01-rag/k-chunk-size-tokens.svg)
+
+| | Counts | Unit | Who decides | Example |
+|---|---|---|---|---|
+| **k** | how many chunks come back | chunks | you, in code | `k = 5` |
+| **chunk_size** | how big each chunk can be | characters (in our splitter) | you, in code | `256` |
+| **tokens** | how much text the LLM reads (and you pay for) | tokens (≈ 4 characters of English) | the tokenizer | "free user" = 2 tokens |
+
+So `k = 5` doesn't mean 5 tokens. It means 5 chunks, which together are roughly 400 tokens
+at `chunk_size=256`.
+
 ## Why they depend on each other
 
 Think about **one answer** that is 530 characters long, like `check_task_limit`:
@@ -57,16 +72,7 @@ So:
 
 ## The four combinations
 
-```mermaid
-quadrantChart
-    title chunk_size vs k
-    x-axis Small k --> Big k
-    y-axis Small chunks --> Big chunks
-    quadrant-1 Too much - noisy and costly
-    quadrant-2 Whole units - few of them
-    quadrant-3 Too little - fragments
-    quadrant-4 Many precise pieces
-```
+![The four combinations of chunk size and k: too little, many precise pieces, whole units, too much](../../assets/images/01-rag/chunk-size-and-k.svg)
 
 ### 1. Small chunks + small k (e.g. 256 × 2): "too little"
 

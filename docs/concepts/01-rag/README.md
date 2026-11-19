@@ -25,21 +25,7 @@ flowchart LR
 
 ## The whole idea on one page
 
-```mermaid
-flowchart TB
-    subgraph OFFLINE["Step 1: prepare (once)"]
-        D["Your documents"] --> CH["Cut into chunks"]
-        CH --> EM["Turn each chunk into numbers (embedding)"]
-        EM --> DB[("Vector database")]
-    end
-    subgraph ONLINE["Step 2: answer (every question)"]
-        Q["User question"] --> QE["Turn question into numbers"]
-        QE --> S["Find the k closest chunks"]
-        DB --> S
-        S --> P["Prompt = question + those chunks"]
-        P --> LLM["LLM writes the answer"]
-    end
-```
+![RAG in 2 steps: prepare (documents, chunk, embed, store) and answer (question, find k closest, add to prompt, LLM answers)](../../assets/images/01-rag/rag-overview.svg)
 
 **R**etrieval (find the right pieces) → **A**ugmented (add them to the prompt) → **G**eneration (the LLM answers).
 

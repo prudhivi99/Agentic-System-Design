@@ -84,5 +84,6 @@ Agentic-System-Design/
 └── project/               ← final capstone project
 ```
 
-> 💡 Diagrams use **Mermaid**, which GitHub draws as pictures automatically. In VS Code, install
+> 💡 Main diagrams are illustrated SVG images (made by `docs/assets/images/_src/make_diagrams.py`).
+> Smaller flow diagrams use **Mermaid**, which GitHub draws as pictures automatically. In VS Code, install
 > the "Markdown Preview Mermaid Support" extension to see them in the preview.
