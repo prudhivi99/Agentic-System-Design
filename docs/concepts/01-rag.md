@@ -107,6 +107,43 @@ of those, and that's where RAG is needed.
 | Personal | Second brain, chatbot long-term memory | History too long for context |
 | Code (large) | Search across 5,000 repos | Too big to grep live → pre-built index |
 
+## Tuning retrieval: chunk size and k
+
+```
+ context the LLM sees  ≈  k  ×  chunk_size
+
+ chunk too SMALL                     chunk too BIG
+ ┌─────┐┌─────┐┌─────┐               ┌────────────────────┐
+ │ def ││ if  ││ ret │ ← 1 function  │ def login(...)     │ ← 2 topics in 1 vector,
+ └─────┘└─────┘└─────┘   in pieces   │ def logout(...)    │   so matching gets "blurry"
+                                     └────────────────────┘
+```
+
+| Knob | Too small | Too big |
+|---|---|---|
+| `chunk_size` | Functions cut into pieces, so answers are incomplete | Mixed topics give fuzzy matches. The embedder also cuts off long text (MiniLM ~256 tokens) |
+| `k` | Misses the right chunk, especially for cross-file questions | More noise and cost. The LLM may grab the wrong code |
+
+Rule of thumb: **small chunks need a bigger k; big chunks can use a smaller k.**
+
+## Testing retrieval: an eval set
+
+Fixed questions with known answers. Change **one** knob, re-run, compare.
+
+```
+ Question ─► [ Retriever ] ─► chunks ─► [ LLM ] ─► Answer
+                  │                        │
+         ✗ right chunk missing     ✗ ignores chunks / invents
+         fix: chunk size, k,       fix: prompt, pass file names,
+              embedding model           "say not found" rule
+```
+
+So check **two** things per question: *was the right chunk retrieved?* and *is the answer
+right, with nothing invented?* A good answer can hide bad retrieval, and the other way round.
+
+Include these question types: simple lookup · same question in two wordings · a whole function ·
+cross-file · trap / not-in-the-code. Example set: [modules/01-rag/test_cases.md](../../modules/01-rag/test_cases.md).
+
 ## My notes
 
 ✍️ TODO: add your own examples and questions here.
