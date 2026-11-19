@@ -1,5 +1,10 @@
 # Module 01 – RAG (Retrieval-Augmented Generation)
 
+> 📚 **New to RAG? Read the [RAG learning path](../../docs/concepts/01-rag/README.md) first**
+> (6 short pages: why RAG, chunking, embeddings, chunk size and k, when to use it, testing).
+> Then come back here to run the code. It's fine if not everything clicks yet; running the
+> experiments is what makes it stick.
+
 ## 1. What problem does this solve?
 
 An LLM doesn't know about *my* code or documents. RAG finds the most relevant pieces of my
@@ -15,7 +20,9 @@ task-management app), and an agent answers questions about it.
 
 - **Document**: one file loaded from disk, plus metadata (`source` = file path).
 - **Chunking**: splitting documents into small pieces (`CHUNK_SIZE = 256` characters,
-  32 overlap). The Python-aware splitter tries to split on `class` / `def` boundaries.
+  32 overlap). The Python-aware splitter tries `class` / `def` boundaries first, but only
+  top-level ones: methods inside classes are split at blank lines instead
+  ([why](../../docs/concepts/01-rag/02-chunking.md#-a-real-surprise-in-our-code)).
 - **Embedding**: turning a chunk into a vector of numbers that captures its meaning
   (model: `all-MiniLM-L6-v2`, runs locally, no API key).
 - **Vector store**: a database that finds the chunks whose vectors are closest to the
@@ -80,7 +87,7 @@ uv run modules/01-rag/2_eval_rag.py --retrieval-only           # free, no LLM ca
 ## 5. What I tried / experiments
 
 Test questions, expected answers and what to observe: [test_cases.md](test_cases.md).
-Why chunk size and k trade off: [concepts/01-rag.md § Tuning retrieval](../../docs/concepts/01-rag.md#tuning-retrieval-chunk-size-and-k).
+Why chunk size and k trade off: [Chunk size and k](../../docs/concepts/01-rag/04-chunk-size-and-k.md).
 
 | Experiment | Change | Result |
 |---|---|---|
@@ -96,7 +103,8 @@ Why chunk size and k trade off: [concepts/01-rag.md § Tuning retrieval](../../d
 ## 7. Questions I still have
 
 - Code has exact names (function, class). When is plain `grep` better than semantic search?
-  (See [concepts/01-rag.md](../../docs/concepts/01-rag.md).)
+  (See [When to use RAG](../../docs/concepts/01-rag/05-when-to-use-rag.md).)
+- Would custom separators (`"\n    def "`) give better chunk hits than the default ones?
 - What happens when a function is split across two chunks? (Test it: T5, T6 in [test_cases.md](test_cases.md).)
 - ✍️ TODO
 
