@@ -84,8 +84,8 @@ summary table at the bottom.
 
 | What | Where in the output | Why it matters |
 |---|---|---|
-| **Retrieval hit** | `billing.py@1 ✅` | Was the right *file* in the top-k, and at what rank? |
-| **Right chunk?** | the `│ first line` of each chunk | A file hit isn't enough: the *specific* lines must be there (see example below) |
+| **File hit** | `billing.py@1 ✅` | Was the right *file* in the top-k, and at what rank? |
+| **Chunk hit** | `1/3 ❌` + which lines were missing | Did the *exact lines* with the answer come back? This is the one that matters (see example below) |
 | **Fragments** | first lines like `) -> Task:` | The chunk starts mid-function, so it was cut by a small chunk size |
 | **Facts** | tick `- [ ]` boxes | Completeness: 4/6 steps, etc. |
 | **Wrong facts** | read the answer | Any claim that is false, even if the rest is good |
@@ -122,6 +122,29 @@ These are predictions to check, not results:
 | k = 2 | T7, T8 | Cross-file answers break |
 | k = 10 | T9, T10 | More context, but more noise. Does it start inventing? |
 | wording | T4a vs T4b | Same score = query rewriting is helping |
+
+## Choosing chunk size and k
+
+Step 1: run every combination in free mode (9 runs, no LLM):
+
+```bash
+for cs in 256 512 1024; do for k in 2 5 10; do
+  uv run modules/01-rag/2_eval_rag.py --retrieval-only --chunk-size $cs --k $k --save
+done; done
+```
+
+Step 2: fill in the chunk hits (of 10):
+
+| | k=2 | k=5 | k=10 |
+|---|---|---|---|
+| chunk 256 | ✍️ | ✍️ | ✍️ |
+| chunk 512 | ✍️ | ✍️ | ✍️ |
+| chunk 1024 | ✍️ | ✍️ | ✍️ |
+
+Step 3: pick the **smallest** chunk size and k that are still near the top. Then run the agent
+(without `--retrieval-only`) on just those settings and check the answers.
+
+Why: [concepts/01-rag.md § How to choose both](../../docs/concepts/01-rag.md#how-to-choose-both-measure-dont-guess).
 
 ## My results
 

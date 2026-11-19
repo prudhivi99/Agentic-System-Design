@@ -126,6 +126,39 @@ of those, and that's where RAG is needed.
 
 Rule of thumb: **small chunks need a bigger k; big chunks can use a smaller k.**
 
+### Chunk size: match it to the answer
+
+Small chunks aren't always bad. It depends on how big the answer is.
+
+```
+ answer = 1 line       (default role)      → small chunk ✅  big chunk buries it
+ answer = 1 function   (scheduler tick())  → small chunk ❌  cut into pieces
+```
+
+### k: how many tickets you buy
+
+```
+ k too small: answer is rank 4, k = 2   → never seen ❌
+ k too big:   answer is rank 1, k = 10  → seen, plus 9 chunks of noise
+```
+
+### How to choose both: measure, don't guess
+
+```
+ 1. Look at the data      typical answer size?   (code: functions ~400–900 chars)
+ 2. Try a grid, free      chunk 256/512/1024 × k 2/5/10, --retrieval-only
+ 3. Pick the SMALLEST     settings that are still near the top chunk-hit score
+ 4. Then pay for LLM      run the agent on the best 1–2 and check the answers
+```
+
+### When tuning stops helping
+
+| Problem | Fix (not a number) |
+|---|---|
+| Functions cut in half | Split on whole functions |
+| LLM mixes up files | Pass the file name with each chunk |
+| LLM says "not found" when it's there | Change the prompt |
+
 ## Testing retrieval: an eval set
 
 Fixed questions with known answers. Change **one** knob, re-run, compare.

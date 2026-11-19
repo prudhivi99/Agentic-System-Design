@@ -36,6 +36,8 @@ _spec.loader.exec_module(rag)
 # Test cases. Keep in sync with test_cases.md (that file explains the why).
 #   facts          = key facts a complete answer should contain (you tick them)
 #   must_retrieve  = files the right answer lives in (checked automatically)
+#   must_contain   = exact lines from the code that hold the answer. Checked against
+#                    the retrieved chunks, so it shows if the RIGHT CHUNK came back.
 # ---------------------------------------------------------------------------
 TEST_CASES = [
     {
@@ -44,18 +46,21 @@ TEST_CASES = [
         "facts": ["Free plan limit is 10 tasks",
                   "(bonus) Pro = 200, Enterprise = 10,000"],
         "must_retrieve": ["billing.py"],
+        "must_contain": ["PlanTier.FREE.value: 10,"],
     },
     {
         "id": "T2", "group": "A. Simple lookup",
         "question": "What role does a user get if no role is assigned?",
         "facts": ["MEMBER is the default role (PermissionPolicy.get_role)"],
         "must_retrieve": ["permissions.py"],
+        "must_contain": ["_user_roles.get(user.id, Role.MEMBER.value)"],
     },
     {
         "id": "T3", "group": "A. Simple lookup",
         "question": "Which actions can a viewer perform?",
         "facts": ["Only task:view"],
         "must_retrieve": ["permissions.py"],
+        "must_contain": ["Role.VIEWER.value: {"],
     },
     {
         "id": "T4a", "group": "B. Wording (exact name)",
@@ -65,6 +70,7 @@ TEST_CASES = [
                   "Counts the user's tasks via db.list_tasks(owner_id=...)",
                   "Raises BillingError when count >= limit"],
         "must_retrieve": ["billing.py"],
+        "must_contain": ["if current_count >= limit:"],
     },
     {
         "id": "T4b", "group": "B. Wording (plain English)",
@@ -74,6 +80,7 @@ TEST_CASES = [
                   "Counts the user's tasks via db.list_tasks(owner_id=...)",
                   "Raises BillingError when count >= limit"],
         "must_retrieve": ["billing.py"],
+        "must_contain": ["if current_count >= limit:"],
     },
     {
         "id": "T5", "group": "C. Whole function",
@@ -85,6 +92,9 @@ TEST_CASES = [
                   "5. audit.record(TASK_CREATED)",
                   "6. notifications.on_task_created (email + Slack)"],
         "must_retrieve": ["task_service.py"],
+        "must_contain": ['self.policy.require(user, "task:create")',
+                         "self.billing.check_task_limit(user)",
+                         "self.notifications.on_task_created(task, user)"],
     },
     {
         "id": "T6", "group": "C. Whole function",
@@ -96,6 +106,9 @@ TEST_CASES = [
                   "Logs TASK_CREATED in the audit log",
                   "Advances next_run (daily +1d, weekly +1w, monthly +30d)"],
         "must_retrieve": ["scheduler.py"],
+        "must_contain": ["if not schedule.is_active or schedule.next_run > now:",
+                         "self.billing.check_task_limit(owner)",
+                         "schedule.next_run = self._advance("],
     },
     {
         "id": "T7", "group": "D. Cross-file",
@@ -105,6 +118,8 @@ TEST_CASES = [
                   "It calls db.create_task directly, bypassing TaskService",
                   "(bonus) so there is no permission check either"],
         "must_retrieve": ["scheduler.py", "task_service.py"],
+        "must_contain": ["billing: BillingService, audit: AuditLogger):",
+                         "title=schedule.title,"],
     },
     {
         "id": "T8", "group": "D. Cross-file",
@@ -113,6 +128,8 @@ TEST_CASES = [
                   "next_run is NOT advanced (_advance only runs after a successful create)",
                   "So it retries on every tick and logs again each time"],
         "must_retrieve": ["scheduler.py"],
+        "must_contain": ["Scheduled task skipped",
+                         "schedule.next_run = self._advance("],
     },
     {
         "id": "T9", "group": "E. Trap",
@@ -120,6 +137,7 @@ TEST_CASES = [
         "facts": ["They are NOT hashed: stored in plaintext in AuthService._passwords",
                   "bcrypt is only mentioned in a comment (use it in production)"],
         "must_retrieve": ["auth.py"],
+        "must_contain": ["self._passwords[user.id] = password"],
     },
     {
         "id": "T10", "group": "E. Negative (not in code)",
@@ -127,6 +145,7 @@ TEST_CASES = [
         "facts": ["Says 'I could not find that in the codebase'",
                   "Does NOT invent a payment / Stripe flow"],
         "must_retrieve": [],
+        "must_contain": [],
     },
 ]
 
@@ -173,6 +192,7 @@ def run_test(case, vector_store, agent, k: int, repo_path: Path):
     out.append(f"**Searches ({len(queries)}):**" if queries else "**Searches: none** ⚠️ answered without searching")
 
     best_rank: dict[str, int] = {}
+    found_snippets: set[str] = set()
     for i, query in enumerate(queries, 1):
         out.append(f"{i}. `{query}`")
         # Similarity search is deterministic, so re-running the agent's query here
@@ -183,20 +203,32 @@ def run_test(case, vector_store, agent, k: int, repo_path: Path):
             for f in case["must_retrieve"]:
                 if src == f or src.endswith("/" + f):
                     best_rank[f] = min(best_rank.get(f, rank), rank)
+            for snippet in case["must_contain"]:
+                if snippet in doc.page_content:
+                    found_snippets.add(snippet)
 
     if case["must_retrieve"]:
-        hit = ", ".join(
+        file_hit = ", ".join(
             f"{f}@{best_rank[f]} ✅" if f in best_rank else f"{f} ❌" for f in case["must_retrieve"]
         )
     else:
-        hit = "n/a (answer is not in the code)"
+        file_hit = "n/a"
+
+    # File hit = right file came back. Chunk hit = the exact lines with the answer came
+    # back. With small chunks a file can be a hit while the answer chunk is missing.
+    wanted = case["must_contain"]
+    if wanted:
+        chunk_hit = f"{len(found_snippets)}/{len(wanted)} " + ("✅" if len(found_snippets) == len(wanted) else "❌")
+        chunk_lines = [f"  - {'✅' if s in found_snippets else '❌'} `{s}`" for s in wanted]
+    else:
+        chunk_hit, chunk_lines = "n/a (answer is not in the code)", []
 
     out += ["", "**Answer:**", "", answer, "",
             f"**Expected, tick what the answer contains ({len(case['facts'])}):**"]
     out += [f"- [ ] {fact}" for fact in case["facts"]]
-    out += ["", f"**Retrieval hit:** {hit}", "", "---", ""]
+    out += ["", f"**File hit:** {file_hit}", f"**Chunk hit:** {chunk_hit}"] + chunk_lines + ["", "---", ""]
 
-    summary = {"id": case["id"], "hit": hit,
+    summary = {"id": case["id"], "file_hit": file_hit, "chunk_hit": chunk_hit,
                "searches": "-" if agent is None else str(len(queries)),
                "facts": f"__/{len(case['facts'])}"}
     return out, summary
@@ -244,9 +276,10 @@ def main():
         summaries.append(summary)
 
     lines += ["## Summary (fill in Facts, Wrong facts and Notes yourself)", "",
-              "| ID | Retrieval hit | Searches | Facts | Wrong facts | Notes |",
-              "|---|---|---|---|---|---|"]
-    lines += [f"| {s['id']} | {s['hit']} | {s['searches']} | {s['facts']} |  |  |" for s in summaries]
+              "| ID | File hit | Chunk hit | Searches | Facts | Wrong facts | Notes |",
+              "|---|---|---|---|---|---|---|"]
+    lines += [f"| {s['id']} | {s['file_hit']} | {s['chunk_hit']} | {s['searches']} | {s['facts']} |  |  |"
+              for s in summaries]
 
     report = "\n".join(lines)
     print("\n" + report)
