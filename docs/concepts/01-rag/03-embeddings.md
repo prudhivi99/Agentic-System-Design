@@ -37,17 +37,7 @@ Embeddings let us search by **what text is about**, not by which exact words it 
 
 Imagine every text is a dot on a map. Similar meanings sit close together:
 
-```
-        ▲
-        │   🐶 "puppy"                          🚗 "car"
-        │     🐕 "dog"                       🚙 "vehicle"
-        │        🐾 "my pet barks"
-        │
-        │                    💳 "billing plan"
-        │                 📈 "task limit for free users"
-        │                    ⛔ "raise BillingError if count >= limit"
-        └───────────────────────────────────────────────────►
-```
+![Text goes through the embedding model to become numbers; on the meaning map, similar texts sit close and the question lands near the billing chunks](../../assets/images/01-rag/embeddings.svg)
 
 A real embedding has **384 directions** instead of 2, but the idea is identical:
 **close dots = similar meaning**.

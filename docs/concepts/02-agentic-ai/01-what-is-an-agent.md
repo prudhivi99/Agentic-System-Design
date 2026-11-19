@@ -37,15 +37,7 @@ result, and repeats until the goal is reached.**
 
 The most common pattern is called **ReAct**: **Re**ason + **Act**.
 
-```mermaid
-flowchart TB
-    G["Goal from the user"] --> T["THINK<br/>What do I know?<br/>What should I do next?"]
-    T --> D{"Done?"}
-    D -- "no" --> A["ACT<br/>Call a tool<br/>(search, API, run code)"]
-    A --> O["OBSERVE<br/>Read the tool's result"]
-    O --> T
-    D -- "yes" --> F["Final answer"]
-```
+![The agent loop: think, act (call a tool), observe, repeat until done](../../assets/images/02-agentic-ai/agent-loop.svg)
 
 ### A real example: our own RAG agent
 

@@ -9,21 +9,7 @@ the LLM decides whether to search, what to search for, and how many times.**
 
 ## Classic RAG vs. agentic RAG
 
-```mermaid
-flowchart LR
-    subgraph CLASSIC["Classic RAG: a fixed pipeline"]
-        Q1["Question"] --> S1["Search with the<br/>exact question"] --> L1["LLM answers"]
-    end
-    subgraph AGENTIC["Agentic RAG: the LLM drives"]
-        Q2["Question"] --> A{"Agent"}
-        A -- "search 'scheduler create task'" --> S2[("Vector DB")]
-        S2 --> A
-        A -- "search 'notifications on create'" --> S2
-        A -- "maybe another tool" --> X["API / SQL / grep"]
-        X --> A
-        A --> L2["Answer"]
-    end
-```
+![Classic RAG searches once with the exact question; agentic RAG decides how often to search and rewrites the query](../../assets/images/02-agentic-ai/classic-vs-agentic-rag.svg)
 
 | | Classic RAG | Agentic RAG |
 |---|---|---|

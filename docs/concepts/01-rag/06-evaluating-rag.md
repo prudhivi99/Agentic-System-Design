@@ -26,15 +26,7 @@ With a fixed **eval set** (also called a **golden set**), you can:
 
 ## A RAG system can fail in two places
 
-```mermaid
-flowchart LR
-    Q["Question"] --> R["Retriever"]
-    R --> C["Chunks"]
-    C --> L["LLM"]
-    L --> A["Answer"]
-    R -. "❌ Failure 1: the right<br/>chunk was NOT found" .-> F1["Fix: chunk size, k,<br/>embedding model,<br/>hybrid search"]
-    L -. "❌ Failure 2: chunk found, but<br/>ignored, misread or invented" .-> F2["Fix: prompt,<br/>pass file names,<br/>'say not found' rule"]
-```
+![Failure 1: the retriever misses the right chunk. Failure 2: the chunk is found but the LLM answers wrong](../../assets/images/01-rag/two-failures.svg)
 
 So for every question, check **two things**:
 

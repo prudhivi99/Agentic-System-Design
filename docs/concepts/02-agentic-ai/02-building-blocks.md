@@ -7,19 +7,7 @@
 **An agent = a model + instructions + tools + memory, running in a loop, with guardrails
 around it.**
 
-```mermaid
-flowchart TB
-    U["User goal"] --> AG
-    subgraph AG["Agent"]
-        M["🧠 Model<br/>(the LLM)"]
-        I["📜 Instructions<br/>(system prompt)"]
-        MEM["🗂️ Memory<br/>(short + long term)"]
-        P["🗺️ Planning<br/>(break goal into steps)"]
-    end
-    AG <--> T["🛠️ Tools<br/>search · APIs · code · files"]
-    G["🛡️ Guardrails<br/>limits · approvals · checks"] -.-> AG
-    AG --> R["Result"]
-```
+![Six building blocks around the agent: model, instructions, tools, memory, planning, guardrails](../../assets/images/02-agentic-ai/agent-building-blocks.svg)
 
 ## 1. Model 🧠: the brain
 
