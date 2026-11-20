@@ -23,7 +23,7 @@ page that explains the term in depth.
 | **Agentic RAG** | An agent that uses retrieval as one of its tools. See [Agentic RAG](concepts/02-agentic-ai/03-agentic-rag.md). |
 | **Grounding** | Making answers rely on retrieved sources rather than model memory. |
 | **Hallucination** | A confident answer that isn't supported by facts or sources. |
-| **Eval set / golden set** | Fixed questions with known correct answers, re-run after every change to compare configs fairly. |
+| **Golden dataset (eval set)** | Real questions with manually checked right answers and relevant chunks: the answer key every metric compares against. See [The golden dataset](concepts/01-rag/13-golden-dataset.md). |
 | **Retrieval hit** | The chunk with the answer was in the top-k. A file can be a hit while the exact chunk is missed. |
 | **Query rewriting** | The agent turns your question into its own search query before calling the retriever. |
 | **Distance score** | How far a chunk's vector is from the query's vector. Lower = more similar (Chroma's default). |
@@ -75,3 +75,18 @@ page that explains the term in depth.
 | **LLM as judge** | Using an LLM call to check another LLM's answer (e.g. "is this supported by the sources?"). |
 | **RAPTOR** | Builds a tree of summaries (summaries of chunk groups, then summaries of those) so big-picture questions can be answered. |
 | **Latency** | How long the user waits for an answer. Every extra RAG step adds some. |
+| **Ground truth** | The known right answer (or right chunks) for a question, from the golden dataset. |
+| **Precision** | Of the chunks returned, the share that is useful. How *clean* the results are. See [Retrieval metrics](concepts/01-rag/14-retrieval-metrics.md). |
+| **Recall** | Of all useful chunks, the share that was returned. How *complete* the results are. |
+| **Recall@K / Precision@K** | Recall and precision counted only inside the top K results. |
+| **Hit rate (Hit@K)** | 1 if any useful chunk is in the top K, else 0; averaged over questions. Ignores position. |
+| **Rank** | A result's position in the returned list (1 = first). |
+| **MRR (Mean Reciprocal Rank)** | Average of 1 ÷ (rank of the first useful chunk) over all questions. |
+| **NDCG** | Ranking quality with graded usefulness: rewards putting the most useful chunks first. 1.0 = perfect order. |
+| **Graded relevance** | Usefulness as a score (e.g. 0–3) instead of just yes/no. Needed for NDCG. |
+| **Faithfulness** | Share of the answer's claims that are supported by the retrieved chunks. Catches hallucination. See [Generation metrics](concepts/01-rag/15-generation-metrics.md). |
+| **Answer relevancy** | Whether the answer addresses the question that was asked. Catches drift. |
+| **Factual correctness** | Whether the answer matches the golden answer. End-to-end metric. |
+| **Context precision / context recall** | LLM-judged versions of precision and recall for the retrieved chunks (e.g. in RAGAS). |
+| **RAGAS** | A popular open-source library for RAG evaluation metrics and synthetic test data. |
+| **Regression** | Something that worked before and broke after a change. The golden dataset catches regressions. |

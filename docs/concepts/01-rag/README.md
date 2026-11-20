@@ -4,8 +4,9 @@
 > You don't need to understand everything the first time. Run the code, then come back.
 > It gets clearer every time.
 
-The path has **three parts**. Part A teaches the basics with module 01. Part B improves
-*how* chunks are found, one module per idea. Part C maps the advanced patterns.
+The path has **four parts**. Part A teaches the basics with module 01. Part B improves
+*how* chunks are found, one module per idea. Part C maps the advanced patterns. Part D shows
+how to *measure* all of it.
 
 ```mermaid
 flowchart TB
@@ -21,7 +22,11 @@ flowchart TB
         direction LR
         C11["11. Advanced RAG patterns"]
     end
-    A --> B --> C
+    subgraph D["Part D · Measuring RAG"]
+        direction LR
+        D12["12. Why metrics"] --> D13["13. Golden dataset"] --> D14["14. Retrieval metrics"] --> D15["15. Generation metrics"]
+    end
+    A --> B --> C --> D
 ```
 
 ### Part A · RAG basics
@@ -54,6 +59,15 @@ flowchart TB
 |---|---|---|---|
 | 11 | [Advanced RAG patterns](11-advanced-rag-patterns.md) | "One extra step = a new kind of RAG": RAPTOR, HyDE, reranking, Corrective RAG, Self-RAG, and how to debug wrong answers. | 20 min |
 
+### Part D · Measuring RAG
+
+| # | Page | You will learn | Time |
+|---|---|---|---|
+| 12 | [Evaluation metrics: why and what](12-why-evaluation-metrics.md) | Why numbers beat opinions; the three levels; which metric points to which layer. | 10 min |
+| 13 | [The golden dataset](13-golden-dataset.md) | The "answer key" every metric needs: fields, question types, size, and how it grows. | 15 min |
+| 14 | [Retrieval metrics](14-retrieval-metrics.md) | Precision, recall, @K, hit rate, MRR, NDCG, with real numbers from our code. | 25 min |
+| 15 | [Generation and end-to-end metrics](15-generation-metrics.md) | Faithfulness, answer relevancy, correctness, and the full cheat sheet. | 15 min |
+
 ## The whole idea on one page
 
 ![RAG in 2 steps: prepare (documents, chunk, embed, store) and answer (question, find k closest, add to prompt, LLM answers)](../../assets/images/01-rag/rag-overview.svg)
@@ -75,7 +89,7 @@ flowchart TB
 
 ## Self-check before moving on
 
-After all eleven pages, you should be able to answer these without looking.
+After all fifteen pages, you should be able to answer these without looking.
 Each page has its own questions at the bottom, with answers.
 
 - [ ] Why can't the LLM just answer questions about my private documents?
@@ -89,5 +103,8 @@ Each page has its own questions at the bottom, with answers.
 - [ ] When is lexical search better than semantic search?
 - [ ] What is Hybrid RAG, and why merge by rank (RRF) instead of by score?
 - [ ] Users say answers are wrong: what do you check first?
+- [ ] What is a golden dataset, and why can't you compute Recall@K without one?
+- [ ] What's the difference between precision and recall? Between MRR and NDCG?
+- [ ] What does faithfulness catch that retrieval metrics can't?
 
 Words you don't know → [glossary](../../glossary.md).

@@ -1143,7 +1143,225 @@ def raptor_tree():
     svg(W, H, b, "raptor-tree", "01-rag", "RAPTOR groups similar chunks, summarizes each group, then summarizes the summaries, building a tree; big-picture questions match the top summaries and detail questions match chunks.")
 
 
+# ---------------------------------------------------------------------------
+# Diagrams: RAG evaluation metrics (RAG pages 12-15)
+# ---------------------------------------------------------------------------
+def eval_why_metrics():
+    W, H = 1100, 470
+    b = title(W, "Why metrics? Opinions vs. numbers", "You changed the chunk size. Did the system get better?")
+    b += note(60, 130, 450, 280, PINK, rot=-0.8)
+    b += cross(100, 168)
+    b += t(125, 175, "Without metrics", size=20, weight=800)
+    for i, s in enumerate(['"looks better…"', '"feels better…"', '"maybe better?"']):
+        b += t(100, 230 + i * 42, s, size=19, italic=True, color=SOFT)
+    b += t(100, 385, "You can't tell, and you can't argue.", size=15, weight=700, color=BAD)
+    b += note(590, 130, 450, 280, GREEN, rot=0.8)
+    b += check(630, 168)
+    b += t(655, 175, "With metrics", size=20, weight=800)
+    rows = [("Recall@5", "0.62 → 0.80"), ("Faithfulness", "0.85 → 0.91"), ("Correctness", "0.70 → 0.78")]
+    for i, (m, v) in enumerate(rows):
+        y = 220 + i * 46
+        b += f'<rect x="625" y="{y}" width="380" height="36" rx="8" fill="#FFFFFF" stroke="#00000020"/>'
+        b += t(642, y + 24, m, size=16, weight=800)
+        b += t(990, y + 24, v + "  ↑", size=16, weight=800, anchor="end", font=MONO, color=GOOD)
+    b += t(630, 385, "Measurable, comparable, repeatable.", size=15, weight=700, color=GOOD)
+    b += t(W / 2, 448, "Metrics turn opinions into numbers.  (example numbers)", size=15, weight=800, anchor="middle")
+    svg(W, H, b, "eval-why-metrics", "01-rag", "Without metrics a change only looks or feels better; with metrics you can see Recall@5, faithfulness and correctness go up.")
+
+
+def eval_three_levels():
+    W, H = 1100, 560
+    b = title(W, "Measure each part, so you know WHERE it broke", "Three levels of evaluation, one for each part of the pipeline.")
+    steps = [("Question", i_chat, PINK), ("Retriever", i_search, YELLOW), ("Chunks", i_stack, YELLOW), ("LLM", i_brain, BLUE), ("Answer", i_spark, BLUE)]
+    for i, (lbl, icon, col) in enumerate(steps):
+        x = 50 + i * 210
+        b += note(x, 130, 160, 110, col, rot=(-0.8, 0.6, -0.5, 0.7, -0.6)[i], tape=False)
+        b += (icon(x + 80, 170, 0.9, fill="#FFFFFF") if icon is i_brain else icon(x + 80, 170))
+        b += t(x + 80, 222, lbl, size=16, weight=800, anchor="middle")
+        if i < 4:
+            b += arrow(x + 165, 185, x + 205, 185)
+    brackets = [(260, 580, GREEN, "1  Retrieval metrics", "Did we retrieve the right chunks?", "Recall@K · Precision@K · Hit · MRR · NDCG"),
+                (680, 1010, PURPLE, "2  Generation metrics", "Did the LLM write a good answer?", "Faithfulness · Answer relevancy")]
+    for x1, x2, col, head, q, ms in brackets:
+        b += f'<path d="M{x1},258 v12 h{x2 - x1} v-12" fill="none" stroke="{INK}" stroke-width="2"/>'
+        b += note(x1, 285, x2 - x1, 105, col, rot=0, tape=False)
+        b += t((x1 + x2) / 2, 315, head, size=16, weight=800, anchor="middle")
+        b += t((x1 + x2) / 2, 340, q, size=14, anchor="middle")
+        b += t((x1 + x2) / 2, 370, ms, size=13, anchor="middle", color=SOFT, font=MONO)
+    b += f'<path d="M50,412 v10 h1010 v-10" fill="none" stroke="{INK}" stroke-width="2"/>'
+    b += note(50, 432, 1010, 100, ORANGE, rot=0, tape=False)
+    b += t(555, 462, "3  End-to-end metrics", size=16, weight=800, anchor="middle")
+    b += t(555, 487, "Did the user get the correct result?", size=14, anchor="middle")
+    b += t(555, 514, "Factual correctness (compare with the known right answer)", size=13, anchor="middle", color=SOFT, font=MONO)
+    svg(W, H, b, "eval-three-levels", "01-rag", "Three levels of RAG evaluation: retrieval metrics check the retriever and chunks, generation metrics check the LLM's answer, end-to-end metrics check the final result.")
+
+
+def golden_dataset_levels():
+    W, H = 1100, 560
+    b = title(W, "The golden dataset: questions with known right answers", "Like an exam answer key. More fields = more you can measure.")
+    levels = [(YELLOW, "Minimum", ["question", "ground_truth"], "→ generation metrics only", "can't check retrieval"),
+              (GREEN, "Better", ["question", "ground_truth", "relevant_docs"], "→ + retrieval metrics", "Recall@K, Precision@K, MRR"),
+              (BLUE, "Best", ["question", "ground_truth", "relevant_docs", "type, difficulty"], "→ + see WHERE it fails", "scores per question type")]
+    for i, (col, name, fields, can, sub) in enumerate(levels):
+        x = 50 + i * 345
+        b += note(x, 130, 310, 300, col, rot=(-0.8, 0.6, -0.5)[i])
+        b += badge(x + 28, 160, i + 1)
+        b += t(x + 155, 175, name, size=21, weight=800, anchor="middle")
+        for j, f in enumerate(fields):
+            y = 200 + j * 40
+            b += f'<rect x="{x + 30}" y="{y}" width="250" height="32" rx="6" fill="#FFFFFF" stroke="#00000020"/>'
+            b += t(x + 155, y + 22, f, size=14, anchor="middle", font=MONO, weight=600)
+        b += t(x + 155, 380, can, size=15, weight=800, anchor="middle")
+        b += t(x + 155, 405, sub, size=13, anchor="middle", color=SOFT)
+    b += note(110, 465, 880, 70, "#FFFFFF", rot=-0.3, tape=False)
+    b += t(550, 495, "Our module 01 test cases (T1–T10) are a golden dataset, close to \"Best\":", size=15, weight=800, anchor="middle")
+    b += t(550, 520, "question · facts · must_retrieve / must_contain · group (no difficulty yet)", size=14, anchor="middle", font=MONO, color=SOFT)
+    svg(W, H, b, "golden-dataset-levels", "01-rag", "Three levels of golden dataset: question and ground truth for generation metrics; plus relevant docs for retrieval metrics; plus type and difficulty to see where the system fails. Our T1 to T10 test cases are one.")
+
+
+def precision_recall():
+    W, H = 1100, 560
+    b = title(W, "Precision and recall", "5 chunks are relevant (green). The retriever returned 4 (inside the box).")
+    # 24 docs grid
+    rel = {0, 1, 2, 9, 17}
+    retrieved = {0, 1, 2, 3}
+    for i in range(24):
+        r, c = divmod(i, 8)
+        x, y = 80 + c * 70, 160 + r * 80
+        col = GREEN if i in rel else "#FFFFFF"
+        b += f'<rect x="{x}" y="{y}" width="46" height="56" rx="5" fill="{col}" stroke="{INK}" stroke-width="1.6"/>'
+        b += t(x + 23, y + 34, "✓" if i in rel else "·", size=18, weight=800, anchor="middle", color=GOOD if i in rel else SOFT)
+    b += f'<rect x="66" y="146" width="284" height="84" rx="10" fill="none" stroke="{ACCENT}" stroke-width="3.5" stroke-dasharray="9 6"/>'
+    b += t(208, 140, "retrieved (4)", size=14, weight=800, anchor="middle", color=ACCENT)
+    b += t(380, 425, "all chunks in the index", size=13.5, anchor="middle", color=SOFT, italic=True)
+
+    b += note(680, 140, 370, 145, YELLOW, rot=0.6)
+    b += t(700, 175, "Precision", size=20, weight=800)
+    b += t(700, 200, "of what I returned, how much is useful?", size=13.5, color=SOFT)
+    b += t(700, 240, "useful returned / all returned", size=14, font=MONO)
+    b += t(700, 268, "= 3 / 4 = 0.75", size=18, weight=800, font=MONO)
+    b += note(680, 305, 370, 145, BLUE, rot=-0.6)
+    b += t(700, 340, "Recall", size=20, weight=800)
+    b += t(700, 365, "of all useful chunks, how many did I find?", size=13.5, color=SOFT)
+    b += t(700, 405, "useful returned / all useful", size=14, font=MONO)
+    b += t(700, 433, "= 3 / 5 = 0.60", size=18, weight=800, font=MONO)
+    b += note(150, 478, 800, 58, "#FFFFFF", rot=-0.3, tape=False)
+    b += t(550, 503, "Precision = how CLEAN the results are.   Recall = how COMPLETE they are.", size=16, weight=800, anchor="middle")
+    b += t(550, 525, "Fishing analogy: precision = how much of your catch is fish; recall = how many of the fish you caught.", size=12.5, anchor="middle", color=SOFT)
+    svg(W, H, b, "precision-recall", "01-rag", "Out of 24 chunks, 5 are relevant; the retriever returns 4, of which 3 are relevant. Precision is 3 out of 4 equals 0.75; recall is 3 out of 5 equals 0.60.")
+
+
+def ranked_list_metrics():
+    W, H = 1100, 560
+    b = title(W, "One ranked list, four retrieval metrics", "The right answer needs D1, D2 and D3. The retriever returned its top 5 (k = 5).")
+    rows = [("1", "D42", False), ("2", "D7", False), ("3", "D1", True), ("4", "D2", True), ("5", "D99", False)]
+    b += t(150, 140, "rank", size=13, weight=700, color=SOFT)
+    for i, (r, d, ok) in enumerate(rows):
+        y = 155 + i * 62
+        b += note(110, y, 300, 50, GREEN if ok else "#FFFFFF", rot=0, tape=False)
+        b += badge(140, y + 25, r, r=14)
+        b += t(175, y + 32, d, size=18, weight=800, font=MONO)
+        b += (check(380, y + 25, 0.8) if ok else cross(380, y + 25, 0.8, color="#9CA3AF"))
+    b += t(260, 488, "D3 was never found ✗", size=15, weight=800, anchor="middle", color=BAD)
+    cards = [(YELLOW, "Hit@5", "any useful chunk in top 5?", "yes → 1"),
+             (BLUE, "Recall@5", "useful found / useful needed", "2 / 3 = 0.67"),
+             (PINK, "Precision@5", "useful found / k", "2 / 5 = 0.40"),
+             (GREEN, "Reciprocal rank", "1 / rank of FIRST useful", "1 / 3 = 0.33")]
+    for i, (col, name, how, val) in enumerate(cards):
+        r, c = divmod(i, 2)
+        x, y = 470 + c * 300, 140 + r * 175
+        b += note(x, y, 280, 155, col, rot=(-0.6, 0.6, 0.5, -0.5)[i])
+        b += t(x + 140, y + 40, name, size=19, weight=800, anchor="middle")
+        b += t(x + 140, y + 70, how, size=13.5, anchor="middle", color=SOFT)
+        b += t(x + 140, y + 118, val, size=22, weight=800, anchor="middle", font=MONO)
+    b += t(770, 515, "MRR = the average reciprocal rank over all your questions", size=14, weight=700, anchor="middle")
+    svg(W, H, b, "ranked-list-metrics", "01-rag", "A ranked list of five results where D1 is at rank 3 and D2 at rank 4: Hit at 5 is 1, Recall at 5 is 2 of 3 equals 0.67, Precision at 5 is 2 of 5 equals 0.40, reciprocal rank is 1 over 3 equals 0.33.")
+
+
+def ndcg_example():
+    W, H = 1100, 560
+    b = title(W, "NDCG: are the BEST chunks at the top?", "Same 3 chunks, two orders. Usefulness: D1 = 3 (the answer), D2 = 2, D3 = 1.")
+    import math
+    disc = [math.log2(r + 1) for r in (1, 2, 3)]  # 1.0, 1.585, 2.0
+    for col_i, (name, order, color, total, nd) in enumerate([
+            ("Bad order", [("D3", 1), ("D2", 2), ("D1", 3)], PINK, "3.76", "0.79"),
+            ("Good order", [("D1", 3), ("D2", 2), ("D3", 1)], GREEN, "4.76", "1.00")]):
+        x0 = 60 + col_i * 520
+        b += note(x0, 130, 460, 340, color, rot=(-0.6, 0.6)[col_i])
+        b += t(x0 + 30, 170, name, size=20, weight=800)
+        b += t(x0 + 30, 200, "rank   chunk   usefulness ÷ discount", size=13, color=SOFT, font=MONO)
+        for i, (d, g) in enumerate(order):
+            y = 220 + i * 62
+            b += badge(x0 + 45, y + 22, i + 1, r=14)
+            b += t(x0 + 85, y + 29, d, size=17, weight=800, font=MONO)
+            b += f'<rect x="{x0 + 140}" y="{y + 6}" width="{g * 55}" height="32" rx="5" fill="#FFFFFF" stroke="{INK}" stroke-width="1.5"/>'
+            b += t(x0 + 148 + g * 55, y + 29, f"{g} ÷ {disc[i]:.2f} = {g / disc[i]:.2f}".replace("÷ 1.00", "÷ 1.0").replace("÷ 2.00", "÷ 2.0").replace("÷ 1.58", "÷ 1.585"), size=14, font=MONO)
+        b += f'<path d="M{x0 + 30},410 h400" stroke="#00000030"/>'
+        b += t(x0 + 30, 445, f"DCG = {total}", size=18, weight=800, font=MONO)
+        b += t(x0 + 430, 445, f"NDCG = {nd}", size=18, weight=800, font=MONO, anchor="end", color=GOOD if nd == "1.00" else BAD)
+    b += note(110, 490, 880, 52, "#FFFFFF", rot=-0.3, tape=False)
+    b += t(550, 522, "Lower ranks count less (÷ discount).  NDCG = DCG ÷ DCG of the perfect order (4.76).", size=15, weight=800, anchor="middle")
+    svg(W, H, b, "ndcg-example", "01-rag", "NDCG example: the same three chunks in a bad order give DCG 3.76 and NDCG 0.79; in the best order DCG 4.76 and NDCG 1.00, because lower ranks are divided by a bigger discount.")
+
+
+def faithfulness_vs_relevancy():
+    W, H = 1100, 580
+    b = title(W, "Faithfulness vs. answer relevancy", "Two ways a good-looking answer can still be wrong.")
+    b += note(50, 130, 480, 410, YELLOW, rot=-0.6)
+    b += t(80, 170, "Faithfulness", size=20, weight=800)
+    b += t(80, 195, "Did the LLM stick to the chunks?", size=14, weight=700, color=SOFT)
+    b += t(80, 228, "Q: What happens when a free user", size=13.5, font=MONO)
+    b += t(80, 246, "   hits the task limit?", size=13.5, font=MONO)
+    b += t(80, 278, "Chunk: check_task_limit raises", size=13.5, font=MONO, color=SOFT)
+    b += t(80, 296, "       BillingError(\"Upgrade your plan\")", size=13.5, font=MONO, color=SOFT)
+    b += t(80, 330, "Answer split into claims:", size=14, weight=800)
+    b += check(95, 360, 0.75) + t(115, 365, '"A BillingError is raised"', size=14)
+    b += cross(95, 395, 0.75) + t(115, 400, '"…and an email warning is sent"', size=14)
+    b += t(115, 420, "not in the chunk: invented", size=12.5, color=BAD, italic=True)
+    b += t(80, 470, "Faithfulness = 1 / 2 = 0.5", size=19, weight=800, font=MONO)
+    b += t(80, 500, "catches: hallucination", size=14, weight=700, color=BAD)
+
+    b += note(570, 130, 480, 410, BLUE, rot=0.6)
+    b += t(600, 170, "Answer relevancy", size=20, weight=800)
+    b += t(600, 195, "Did it answer THE question asked?", size=14, weight=700, color=SOFT)
+    b += t(600, 228, "Q: What is the task limit", size=13.5, font=MONO)
+    b += t(600, 246, "   for a free user?", size=13.5, font=MONO)
+    b += t(600, 290, "Answer:", size=14, weight=800)
+    b += t(600, 315, ['"Plans are stored per user, and', 'users can upgrade their plan tier."'], size=14, italic=True)
+    b += check(615, 380, 0.75) + t(635, 385, "true, and supported by the code", size=14)
+    b += cross(615, 415, 0.75) + t(635, 420, 'but never says "10"', size=14)
+    b += t(600, 470, "Answer relevancy: LOW", size=19, weight=800, font=MONO)
+    b += t(600, 500, "catches: answering the wrong thing", size=14, weight=700, color=BAD)
+    svg(W, H, b, "faithfulness-vs-relevancy", "01-rag", "Faithfulness checks each claim of the answer against the chunks: one of two claims is invented, so 0.5. Answer relevancy checks whether the answer addresses the question: a true answer that never states the limit scores low.")
+
+
+def eval_stack():
+    W, H = 1100, 520
+    b = title(W, "Which metric points to which layer?", "A low score tells you where to look.")
+    layers = [(YELLOW, "1  Chunking", "how documents are split", "Recall@K, Precision@K"),
+              (GREEN, "2  Retrieval", "what gets fetched", "Recall@K, Hit rate, MRR, context recall"),
+              (BLUE, "3  Reranking", "the order of the top k", "Precision@K, NDCG"),
+              (PURPLE, "4  Generation", "the LLM's answer", "Faithfulness, answer relevancy")]
+    for i, (col, name, what, ms) in enumerate(layers):
+        y = 130 + i * 82
+        b += note(80, y, 940, 66, col, rot=0, tape=False)
+        b += t(110, y + 30, name, size=18, weight=800)
+        b += t(110, y + 53, what, size=13.5, color=SOFT)
+        b += t(990, y + 42, "→  " + ms, size=15, weight=700, anchor="end", font=MONO)
+    b += note(80, 460, 940, 46, ORANGE, rot=0, tape=False)
+    b += t(550, 490, "End-to-end, across all layers:  factual correctness", size=16, weight=800, anchor="middle")
+    svg(W, H, b, "eval-stack", "01-rag", "Four layers and their metrics: chunking with recall and precision at K; retrieval with recall, hit rate, MRR and context recall; reranking with precision at K and NDCG; generation with faithfulness and answer relevancy; plus factual correctness end to end.")
+
+
 if __name__ == "__main__":
+    eval_why_metrics()
+    eval_three_levels()
+    golden_dataset_levels()
+    precision_recall()
+    ranked_list_metrics()
+    ndcg_example()
+    faithfulness_vs_relevancy()
+    eval_stack()
     advanced_rag_map()
     hyde()
     corrective_vs_self_rag()

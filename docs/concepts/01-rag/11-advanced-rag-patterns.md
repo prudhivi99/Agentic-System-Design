@@ -207,4 +207,4 @@ summaries), which match big-picture questions.
 
 ---
 
-[← Hybrid RAG](10-hybrid-rag.md) · [Back to learning path](README.md) · Next: [Agentic AI →](../02-agentic-ai/README.md)
+[← Hybrid RAG](10-hybrid-rag.md) · [Back to learning path](README.md) · [Next: Evaluation metrics →](12-why-evaluation-metrics.md)
