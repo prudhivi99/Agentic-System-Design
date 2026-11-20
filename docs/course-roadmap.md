@@ -20,7 +20,7 @@ The course has 5 sections. This page tracks each topic and links to where it's c
 | Metadata filtering and access control | 🟡 | [When to use RAG](concepts/01-rag/05-when-to-use-rag.md) (permissions); module 02 stores `type` / `name` metadata |
 | Freshness, incremental indexing, multi-tenant retrieval | ⚪ | |
 | RAG debugging and optimization | ✅ | [Chunk size and k](concepts/01-rag/04-chunk-size-and-k.md) (incl. the k=1 vs. k=4 example), [debugging wrong answers](concepts/01-rag/11-advanced-rag-patterns.md#users-say-the-answers-are-wrong-what-would-you-do) |
-| RAG evals | ✅ | [Testing a RAG system](concepts/01-rag/06-evaluating-rag.md), [test cases](../modules/01-rag/test_cases.md) |
+| RAG evals | ✅ | [Testing a RAG system](concepts/01-rag/06-evaluating-rag.md); Part D: [why metrics](concepts/01-rag/12-why-evaluation-metrics.md), [golden dataset](concepts/01-rag/13-golden-dataset.md), [retrieval metrics](concepts/01-rag/14-retrieval-metrics.md), [generation metrics](concepts/01-rag/15-generation-metrics.md); [test cases](../modules/01-rag/test_cases.md) (metrics not yet automated) |
 
 ## 2. Context Engineering
 

@@ -7,6 +7,10 @@
 **Ask the same fixed questions, with known correct answers, after every change, and check
 both what was _retrieved_ and what was _answered_.**
 
+> 📏 This page is the simple, hands-on version. The full picture (golden datasets, Recall@K,
+> MRR, NDCG, faithfulness…) is in **Part D: Measuring RAG**, starting at
+> [Evaluation metrics: why and what](12-why-evaluation-metrics.md).
+
 ## Why do we need this?
 
 Without a test set, you compare **different questions**, not **different settings**:
